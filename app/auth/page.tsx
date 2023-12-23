@@ -3,12 +3,12 @@ import { lemonada } from "@/ui/fonts"
 
 export default function Page() {
   return (
-    <main className="h-screen w-screen flex flex-col items-center justify-between">
-      <h1 className={`${lemonada.className} -tracking-[4px] text-5xl mt-10`}>
+    <main className="h-svh w-screen flex flex-col items-center justify-between">
+      <h1 className={`${lemonada.className} -tracking-[4px] text-5xl sm:text-2xl mt-10`}>
         <Link href="/">Moments</Link>
       </h1>
       <div className="mb-16">
-        <h3 className="text-[40px] font-bold mb-9">Sign in / Sign up</h3>
+        <h3 className="text-4xl sm:text-xl font-bold mb-9">Sign in / Sign up</h3>
         <form className="flex flex-col gap-4">
           <input
             className="rounded-md px-4 py-2"

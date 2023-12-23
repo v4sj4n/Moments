@@ -2,10 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-:root{
-  color-scheme: light dark;
+:root {
+  background-color: #1f1f1f;
+  color: white;
 }
-html, body{
+
+html,
+body {
   margin: 0;
   padding: 0;
 }
