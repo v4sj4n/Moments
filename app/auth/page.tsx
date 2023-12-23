@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { lemonada } from "../layout"
+import { lemonada } from "@/ui/fonts"
 
 export default function Page() {
   return (
