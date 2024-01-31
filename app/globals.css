@@ -32,5 +32,9 @@ body{
 
 .accent-color-border{
   border: 2.5px solid #F46464;
-  border-radius: 2px;
+  border-radius: 10px;
+}
+
+.section-heading{
+  color: #EEEEEE;
 }
