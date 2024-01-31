@@ -38,3 +38,7 @@ body{
 .section-heading{
   color: #EEEEEE;
 }
+
+.disabled-input{
+  color: #bebebe;
+}

@@ -15,7 +15,9 @@ export default function Page() {
             id='user'
           />
 
-          <button className='h-8 accent-color-bg  rounded-[10px] font-bold border accent-color-border'>continue</button>
+          <button className='h-8 accent-color-bg  rounded-[10px] font-bold border accent-color-border'>
+            continue
+          </button>
         </form>
       </main>
     </>
