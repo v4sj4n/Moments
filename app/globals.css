@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+html, body{
+  padding: 0;
+  margin: 0;
+
+}
+body{
+  background: #1f1f1f;
+  color: #fff;
+}
+
+.raleway{
+  font-family: 'Raleway', sans-serif;
+}
+
+.poppins{
+  font-family: 'Poppins', sans-serif;
+}
+
+.accent-color{
+  color: #F46464;
+}
+
+.accent-color-bg{
+  background-color: #F46464;
+}
+
+
+.accent-color-border{
+  border: 2.5px solid #F46464;
+  border-radius: 2px;
+}
