@@ -25,7 +25,7 @@ export default function RootLayout({
           baseTheme: dark,
         }}
       >
-        <body className={`${raleway.className} ${poppins.className}`}>
+        <body className={`${raleway.className} ${poppins.className} mx-5 mt-5`}>
           {children}
         </body>
       </ClerkProvider>

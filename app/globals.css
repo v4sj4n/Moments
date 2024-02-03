@@ -29,6 +29,11 @@ body{
   background-color: #F46464;
 }
 
+.accent-color-underline{
+  text-decoration: underline;
+  text-decoration-color: #F46464;
+}
+
 
 .accent-color-border{
   border: 2.5px solid #F46464;
