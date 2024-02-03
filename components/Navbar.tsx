@@ -13,7 +13,14 @@ export default function Navbar() {
           width={50}
         />
       </Link>
-      <UserButton showName />
+      <UserButton
+        appearance={{
+          elements: {
+            userButtonOuterIdentifier: 'raleway font-bold text-lg mr-2',
+          },
+        }}
+        showName
+      />
     </nav>
   )
 }

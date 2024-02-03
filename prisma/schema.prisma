@@ -16,4 +16,15 @@ model User {
   lastName  String?
   email     String  @unique
   username  String  @unique
+  Group     Group[]
+}
+
+model Group {
+  id          String  @unique @default(uuid())
+  title       String
+  description String?
+  slug        String  @unique
+  creator     User    @relation(fields: [creatorId], references: [id])
+  creatorId   String
+  joincode    String  @unique @default(cuid())
 }
