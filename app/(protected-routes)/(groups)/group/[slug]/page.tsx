@@ -1,3 +1,4 @@
+import JoinCodeBtn from '@/components/JoinCodeBtn'
 import prisma from '@/lib/prisma'
 import { currentUser } from '@clerk/nextjs'
 export default async function Page({ params }: { params: { slug: string } }) {
@@ -37,6 +38,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
       <p className='raleway text-md text-gray-300 group-description lowercase'>
         {group.description}
       </p>
+      <JoinCodeBtn joinCode={group!.joincode!} />
     </main>
   )
 }
