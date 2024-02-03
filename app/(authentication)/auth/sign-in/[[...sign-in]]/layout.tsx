@@ -1,9 +1,8 @@
-import { Metadata } from "next"
+import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Sign in | Moments',
-  description:
-    'Sign in to your account in Moments to access your groups',
+  description: 'Sign in to your account in Moments to access your groups',
 }
 
 export default function RootLayout({
@@ -13,9 +12,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body>
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   )
 }

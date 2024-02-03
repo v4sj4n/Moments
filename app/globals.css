@@ -3,51 +3,53 @@
 @tailwind utilities;
 
 
-html, body{
+html,
+body {
   padding: 0;
   margin: 0;
 
 }
-body{
+
+body {
   background: #1f1f1f;
   color: #fff;
 }
 
-.raleway{
+.raleway {
   font-family: 'Raleway', sans-serif;
 }
 
-.poppins{
+.poppins {
   font-family: 'Poppins', sans-serif;
 }
 
-.accent-color{
+.accent-color {
   color: #F46464;
 }
 
-.accent-color-bg{
+.accent-color-bg {
   background-color: #F46464;
 }
 
-.accent-color-underline{
+.accent-color-underline {
   text-decoration: underline;
   text-decoration-color: #F46464;
 }
 
-.accent-color-underline-h:hover{
+.accent-color-underline-h:hover {
   text-decoration: underline;
   text-decoration-color: #F46464;
 }
 
-.accent-color-border{
+.accent-color-border {
   border: 2.5px solid #F46464;
   border-radius: 10px;
 }
 
-.section-heading{
+.section-heading {
   color: #EEEEEE;
 }
 
-.disabled-input{
+.disabled-input {
   color: #bebebe;
 }

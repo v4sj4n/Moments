@@ -1,9 +1,8 @@
-import { Metadata } from "next"
+import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Get Started | Moments',
-  description:
-    'Get started by creating or joining a group',
+  description: 'Get started by creating or joining a group',
 }
 
 export default function RootLayout({
@@ -13,9 +12,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body>
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   )
 }
