@@ -1,7 +1,6 @@
 'use client'
 
 export default function JoinCodeBtn({ joinCode }: { joinCode: string }) {
-  console.log(joinCode)
   const handleClick = () => {
     navigator.clipboard.writeText(joinCode)
   }

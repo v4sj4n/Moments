@@ -19,7 +19,6 @@ export default async function Page() {
     },
   })
 
-  console.log(groupsForUser)
 
   return (
     <main className='mx-10 mt-5'>
