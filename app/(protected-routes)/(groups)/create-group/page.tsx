@@ -11,9 +11,9 @@ export default async function Page() {
     const title = formData.get('title') as string
     const description = formData.get('description') as string
 
-    const slug = title.toLowerCase().replace(' ', '-') + '-' + userName
+    const slug = title.split(' ').join('-') + '-' + userName
 
-    await prisma.group.create({
+    const group = await prisma.group.create({
       data: {
         title,
         description,
@@ -26,7 +26,29 @@ export default async function Page() {
         },
       },
     })
-    redirect('/dashboard')
+    if (group) {
+      await prisma.userGroup.create({
+        data: {
+          user: {
+            connect: {
+              id: userId,
+            },
+          },
+          group: {
+            connect: {
+              id: group.id,
+            },
+          },
+          isAdmin: true,
+          groupTitle: title,
+          groupDescription: description,
+          groupSlug: slug,
+        },
+      })
+      redirect('/dashboard')
+    } else {
+      throw new Error("Couldn't create group")
+    }
   }
   return (
     <main className='mx-10 mt-5'>

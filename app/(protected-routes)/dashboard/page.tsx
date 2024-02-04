@@ -13,12 +13,11 @@ export default async function Page() {
     username: user!.username,
   }
 
-  const groupsForUser = await prisma.group.findMany({
+  const groupsForUser = await prisma.userGroup.findMany({
     where: {
-      creatorId: userObj.id,
+      userId: userObj.id,
     },
   })
-
 
   return (
     <main className='mx-10 mt-5'>
@@ -42,16 +41,18 @@ export default async function Page() {
         </p>
       </div>
       {groupsForUser ? (
-        groupsForUser.map((group) => (
-          <GroupCard
-            key={group.id}
-            group={{
-              title: group.title,
-              description: group.description!,
-              slug: group.slug,
-            }}
-          />
-        ))
+        groupsForUser.map(
+          ({ groupTitle, groupDescription, groupId, groupSlug }) => (
+            <GroupCard
+              key={groupId}
+              group={{
+                title: groupTitle!,
+                description: groupDescription!,
+                slug: groupSlug!,
+              }}
+            />
+          )
+        )
       ) : (
         <p>There are no groups</p>
       )}
