@@ -42,21 +42,19 @@ export default async function Page() {
       </div>
       {groupsForUser ? (
         <div className='flex gap-4'>
-
-        {groupsForUser.map(
-          ({ groupTitle, groupDescription, groupId, groupSlug }) => (
-            <GroupCard
-              key={groupId}
-              group={{
-                title: groupTitle!,
-                description: groupDescription!,
-                slug: groupSlug!,
-              }}
-            />
-          )
-        )}
+          {groupsForUser.map(
+            ({ groupTitle, groupDescription, groupId, groupSlug }) => (
+              <GroupCard
+                key={groupId}
+                group={{
+                  title: groupTitle!,
+                  description: groupDescription!,
+                  slug: groupSlug!,
+                }}
+              />
+            )
+          )}
         </div>
-
       ) : (
         <p>There are no groups</p>
       )}

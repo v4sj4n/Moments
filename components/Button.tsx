@@ -12,7 +12,10 @@ export default function Button({
   return (
     <>
       {pending ? (
-        <button className='raleway font-bold mt-6 w-full px-4 py-2 bg-red-400 rounded-lg' disabled>
+        <button
+          className='raleway font-bold mt-6 w-full px-4 py-2 bg-red-400 rounded-lg'
+          disabled
+        >
           {valueLoading}
         </button>
       ) : (

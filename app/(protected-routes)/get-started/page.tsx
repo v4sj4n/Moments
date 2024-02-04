@@ -31,15 +31,18 @@ export default async function Page() {
     })
   }
   return (
-    <main className='mx-24'>
-      <h1 className='raleway text-2xl'>
-        Hello,{' '}
-        <span className='accent-color-underline'>
-          {user!.firstName! ? user?.firstName : 'user'}
-        </span>
-        .
-      </h1>
-      create a group go to dashboard
-    </main>
+    <>
+      <Navbar />
+      <main className='mx-24'>
+        <h1 className='raleway text-2xl'>
+          Hello,{' '}
+          <span className='accent-color-underline'>
+            {user!.firstName! ? user?.firstName : 'user'}
+          </span>
+          .
+        </h1>
+        create a group go to dashboard
+      </main>
+    </>
   )
 }
