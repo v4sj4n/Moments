@@ -2,15 +2,15 @@ import JoinCodeBtn from '@/components/JoinCodeBtn'
 import prisma from '@/lib/prisma'
 import { currentUser } from '@clerk/nextjs'
 import { notFound } from 'next/navigation'
-import type { Metadata, ResolvingMetadata } from 'next'
+import type { Metadata } from 'next'
+import Navbar from '@/components/Navbar'
+import DeleteOrLeaveButton from '@/components/DeleteOrLeaveButton'
 
-type Props = {
-  params: {
-    slug: string
-  }
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string }
+}): Promise<Metadata> {
   const group = await prisma.group.findFirst({
     where: {
       slug: params.slug,
@@ -26,39 +26,69 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default async function Page({ params }: Props) {
-  const group = await prisma.group.findFirst({
+export default async function Page({ params }: { params: { slug: string } }) {
+  const user = await currentUser()
+  const userGroupDetails = await prisma.userGroup.findFirst({
+    where: {
+      AND: [
+        {
+          groupSlug: params.slug,
+        },
+        {
+          userId: user?.id,
+        },
+      ],
+    },
+  })
+
+  if (!userGroupDetails) {
+    notFound()
+  }
+  const groupDetails = await prisma.group.findFirst({
     where: {
       slug: params.slug,
     },
   })
 
-  const user = await currentUser()
-  const isCreator = group?.creatorId === user?.id
+  const group = {
+    title: groupDetails?.title,
+    description: groupDetails?.description,
+    joinCode: groupDetails?.joincode!,
+    isAdmin: userGroupDetails.isAdmin,
+  }
 
-  if (!isCreator) {
+  if (!group?.isAdmin) {
     return (
-      <main className='mx-10 mt-5'>
-        <h2 className='raleway font-bold group-title text-3xl'>
-          {group!.title}
-        </h2>
-        <p className='raleway text-md text-gray-300 group-description lowercase'>
-          {group!.description}
-        </p>
-        <h2 className='raleway font-bold group-title text-xl'>
-          Not the creator of this group
-        </h2>
-      </main>
+      <>
+        <Navbar />
+        <main className='mx-10 mt-5'>
+          <h2 className='raleway font-bold group-title text-3xl'>
+            {group.title}
+          </h2>
+          <p className='raleway text-md text-gray-300 group-description lowercase'>
+            {group.description}
+          </p>
+          <JoinCodeBtn joinCode={group.joinCode} />
+          <DeleteOrLeaveButton value='leave' />
+        </main>
+      </>
     )
   }
 
   return (
-    <main className='mx-10 mt-5'>
-      <h2 className='raleway font-bold group-title text-3xl'>{group!.title}</h2>
-      <p className='raleway text-md text-gray-300 group-description lowercase'>
-        {group!.description}
-      </p>
-      <JoinCodeBtn joinCode={group!.joincode!} />
-    </main>
+    <>
+      <Navbar />
+      <main className='mx-10 mt-5'>
+        <h2 className='raleway font-bold group-title text-3xl'>
+          {group.title}
+        </h2>
+        <p className='raleway text-md text-gray-300 group-description lowercase'>
+          {group.description}
+        </p>
+        <JoinCodeBtn joinCode={group.joinCode} />
+
+        <DeleteOrLeaveButton value='delete' />
+      </main>
+    </>
   )
 }

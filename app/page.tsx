@@ -3,8 +3,6 @@ import Link from 'next/link'
 
 export default async function Home() {
   const user = await currentUser()
-  console.log(user)
-
   return (
     <main className='h-[96svh] grid place-content-center'>
       <div>
