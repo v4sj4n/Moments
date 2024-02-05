@@ -40,9 +40,6 @@ export const createGroup = async (formData: FormData) => {
           },
         },
         isAdmin: true,
-        groupTitle: title,
-        groupDescription: description,
-        groupSlug: slug,
       },
     })
     redirect('/dashboard')
@@ -75,9 +72,6 @@ export const joinGroup = async (formData: FormData) => {
             id: group.id,
           },
         },
-        groupTitle: group.title,
-        groupDescription: group.description,
-        groupSlug: group.slug,
       },
     })
     redirect('/dashboard')
@@ -113,10 +107,14 @@ export const leaveGroup = async (formData: FormData) => {
     where: {
       AND: [
         {
-          userId: userId,
+          user: {
+            id: userId,
+          },
         },
         {
-          groupId: groupId,
+          group: {
+            id: groupId,
+          },
         },
       ],
     },
