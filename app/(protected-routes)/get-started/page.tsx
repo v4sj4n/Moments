@@ -34,7 +34,7 @@ export default async function Page() {
   return (
     <>
       <Navbar />
-      <main className='md:mx-20 mx-4 mt-5'>
+      <main className='md:mx-20 mx-6 mt-5'>
         <h1 className='raleway text-3xl mb-2'>
           Hello,{' '}
           <span className='accent-color-underline font-bold raleway'>

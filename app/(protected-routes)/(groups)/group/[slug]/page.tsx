@@ -80,7 +80,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
   return (
     <>
       <Navbar />
-      <main className='md:mx-20 mx-4 mt-5'>
+      <main className='md:mx-20 mx-6 mt-5'>
         <div className='flex justify-between md:items-center md:flex-row gap-4 md:gap-0 flex-col mb-4'>
           <div>
             <h2 className='raleway font-bold group-title text-3xl'>

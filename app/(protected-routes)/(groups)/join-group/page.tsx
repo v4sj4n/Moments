@@ -4,10 +4,10 @@ import Link from 'next/link'
 
 export default async function Page() {
   return (
-    <main className='mx-10 mt-5'>
+    <main className='md:mx-20 mx-6 mt-5'>
       <h1 className='raleway text-3xl font-bold mb-8'>Join a group</h1>
 
-      <form action={joinGroup} className='flex flex-col w-1/4'>
+      <form action={joinGroup} className='flex flex-col md:w-1/2 lg:w-1/3'>
         <label htmlFor='joinCode' className='block raleway text-lg mb-1'>
           Group&apos;s Join Code
         </label>
@@ -15,7 +15,7 @@ export default async function Page() {
           type='text'
           name='joinCode'
           id='joinCode'
-          className='block px-4 py-2  mb-3 rounded-md bg-transparent border outline-none'
+          className='block px-4 py-2 rounded-md bg-transparent border outline-none'
           placeholder="Enter a group's join code"
           min={10}
         />
