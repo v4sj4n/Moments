@@ -27,7 +27,7 @@ export default async function Page() {
         className='inline-block mt-3 hover:underline'
         href={'/create-group'}
       >
-        Join a group
+        Create a group
       </Link>
     </main>
   )

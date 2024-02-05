@@ -35,7 +35,7 @@ export default async function Page() {
       </form>
       <Link
         className='inline-block mt-3 hover:underline'
-        href={'/create-group'}
+        href={'/join-group'}
       >
         Join a group
       </Link>
