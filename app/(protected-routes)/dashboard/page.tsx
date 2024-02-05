@@ -17,8 +17,12 @@ export default async function Page() {
     where: {
       userId: userObj.id,
     },
+    select: {
+      group: true,
+    },
   })
 
+  console.log(groupsForUser)
   return (
     <main className='mx-10 mt-5'>
       <div className='flex justify-between items-center'>
@@ -42,18 +46,16 @@ export default async function Page() {
       </div>
       {groupsForUser ? (
         <div className='flex gap-4'>
-          {groupsForUser.map(
-            ({ groupTitle, groupDescription, groupId, groupSlug }) => (
-              <GroupCard
-                key={groupId}
-                group={{
-                  title: groupTitle!,
-                  description: groupDescription!,
-                  slug: groupSlug!,
-                }}
-              />
-            )
-          )}
+          {groupsForUser.map((groupObj) => (
+            <GroupCard
+              key={groupObj.group.id}
+              group={{
+                title: groupObj.group.title!,
+                description: groupObj.group.description!,
+                slug: groupObj.group.slug!,
+              }}
+            />
+          ))}
         </div>
       ) : (
         <p>There are no groups</p>
