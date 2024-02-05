@@ -59,12 +59,12 @@ export default async function Page({ params }: { params: { slug: string } }) {
   return (
     <>
       <Navbar />
-      <main className='mx-10 mt-5'>
-        <h1 className='raleway text-3xl font-bold '>
+      <main className='md:mx-20 mx-4 mt-5'>
+        <h1 className='raleway md:text-3xl text-2xl font-bold '>
           Are you sure you want to delete?
         </h1>
 
-        <form action={deleteGroup} className='flex flex-col w-1/4 mb-2'>
+        <form action={deleteGroup} className='flex flex-col md:w-1/4 mb-2'>
           <input
             type='text'
             name='groupId'

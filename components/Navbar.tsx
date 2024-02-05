@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 export default function Navbar() {
   return (
-    <nav className='flex items-center justify-between mx-10 py-3'>
+    <nav className='flex items-center justify-between md:mx-20 mx-4 md:mt-12 mt-2'>
       <Link href='/dashboard'>
         <Image
           src={'/momentsLetterLogo.png'}
@@ -16,7 +16,7 @@ export default function Navbar() {
       <UserButton
         appearance={{
           elements: {
-            userButtonOuterIdentifier: 'raleway font-bold text-lg mr-2',
+            userButtonOuterIdentifier: 'raleway font-bold md:text-xl text-lg mr-2',
           },
         }}
         showName

@@ -19,7 +19,7 @@ export default function Button({
           {valueLoading}
         </button>
       ) : (
-        <button className='raleway font-bold mt-6 w-full px-4 py-2 accent-color-bg  rounded-lg'>
+        <button className='raleway font-bold mt-6 w-full px-4 py-2 bg-red-500  rounded-lg'>
           {value}
         </button>
       )}

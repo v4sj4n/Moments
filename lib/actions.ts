@@ -139,8 +139,6 @@ export const sendMessage = async (formData: FormData) => {
   const groupSlug = formData.get('groupSlug') as string
   const message = formData.get('message') as string
 
-  console.log(formData)
-
   await prisma.message.create({
     data: {
       text: message,

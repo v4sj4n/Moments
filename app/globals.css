@@ -23,7 +23,7 @@ body {
 }
 
 .accent-color {
-    color: #F46464;
+  color: #F46464;
 }
 
 .accent-color-bg {
@@ -31,12 +31,11 @@ body {
 }
 
 .accent-color-underline {
-  text-decoration: underline;
-  text-decoration-color: #F46464;
+  text-decoration: underline wavy #F46464 2px;
 }
 
 .accent-color-underline-h:hover {
-  text-decoration: underline;
+  text-decoration: underline 2px wavy;
   text-decoration-color: #F46464;
 }
 

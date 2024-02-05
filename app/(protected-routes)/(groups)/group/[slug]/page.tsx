@@ -7,6 +7,7 @@ import Navbar from '@/components/Navbar'
 import DeleteOrLeaveButton from '@/components/DeleteOrLeaveButton'
 import Message from '@/components/Message'
 import { sendMessage } from '@/lib/actions'
+import SendMessageForm from '@/components/SendMessageForm'
 
 export async function generateMetadata({
   params,
@@ -50,43 +51,6 @@ export default async function Page({ params }: { params: { slug: string } }) {
     },
   })
 
-  // message
-
-  const messages = [
-    {
-      id: 1,
-      message: 'Hello, how are you?',
-      sender: 'John Doe',
-      time: '12:00',
-    },
-    {
-      id: 2,
-      message: 'I am fine, thank you.',
-      sender: 'Jane Doe',
-      time: '12:01',
-    },
-    {
-      id: 3,
-      message: 'How are you?',
-      sender: 'John Doe',
-      time: '12:02',
-    },
-    {
-      id: 4,
-      message: 'I am fine, thank you.',
-      sender: 'Jane Doe',
-      time: '12:03',
-    },
-    {
-      id: 5,
-      message: 'How are you?',
-      sender: 'John Doe',
-      time: '12:04',
-    },
-  ]
-
-  ///
-
   if (!userGroupDetails) {
     notFound()
   }
@@ -113,67 +77,62 @@ export default async function Page({ params }: { params: { slug: string } }) {
     },
   })
 
-  console.log(messagesArr)
   return (
     <>
       <Navbar />
-      <main className='mx-10 mt-5'>
-        <h2 className='raleway font-bold group-title text-3xl'>
-          {group.title}
-        </h2>
-        <p className='raleway text-md text-gray-300 group-description lowercase'>
-          {group.description}
-        </p>
-        <JoinCodeBtn joinCode={group.joinCode} />
+      <main className='md:mx-20 mx-4 mt-5'>
+        <div className='flex justify-between md:items-center md:flex-row gap-4 md:gap-0 flex-col mb-4'>
+          <div>
+            <h2 className='raleway font-bold group-title text-3xl'>
+              {group.title}
+            </h2>
+            <p className='raleway text-md text-gray-300 group-description lowercase'>
+              {group.description}
+            </p>
+            <JoinCodeBtn joinCode={group.joinCode} />
+          </div>
+          <div>
+            {userGroupDetails.group.creatorId === user?.id ? (
+              <DeleteOrLeaveButton value='delete' />
+            ) : (
+              <DeleteOrLeaveButton value='leave' />
+            )}
+          </div>
+        </div>
 
-        <div className='grid grid-cols-3 gap-4 h-[60svh]'>
-          <section className='col-span-2 bg-gray-200 bg-opacity-20 p-4 rounded-md border'>
-            <h1 className='raleway font-bold text-xl'>Messages</h1>
-            <hr className='border-opacity-25 border-zinc-300 mb-2 mt-1' />
-            {/* messages list  */}
-            <div>
-              {messagesArr.map(({ id, text, user, createdAt }) => (
-                <Message
-                  key={id}
-                  message={text}
-                  sender={user.username}
-                  time={createdAt.toString()}
-                />
-              ))}
+        <div className='grid md:grid-cols-3 gap-4 md:h-[60svh]'>
+          <section className='md:col-span-2 grid grid-rows-7 bg-gray-100 bg-opacity-10 p-4 rounded-lg border'>
+            <div className='row-span-1'>
+              <h1 className='pl-2 raleway font-bold text-xl'>Messages</h1>
+              <hr className='border-opacity-25 border-zinc-300 mb-2 mt-1' />
             </div>
-            <form action={sendMessage} className='flex gap-2'>
-              <input
-                type='hidden'
-                name='groupId'
-                value={userGroupDetails.group.id}
-              />
-              <input
-                type='hidden'
-                name='groupSlug'
-                value={userGroupDetails.group.slug}
-              />
-              <input
-                type='text'
-                placeholder='Enter a text'
-                name='message'
-                className='w-full px-4 py-2 bg-transparent border outline-none rounded-md'
-              />
-              <button className='bg-zinc-200 border rounded-md text-zinc-700 px-4 '>
-                Send
-              </button>
-            </form>
+            <div className='row-span-6 pl-2 flex flex-col justify-start'>
+              {messagesArr.length > 0 ? (
+                messagesArr.map(({ id, text, user, createdAt }) => (
+                  <Message
+                    key={id}
+                    message={text}
+                    sender={user.username}
+                    time={createdAt.toString()}
+                  />
+                ))
+              ) : (
+                <p className='text-center text-gray-300'>No messages yet</p>
+              )}
+            </div>
+            <SendMessageForm
+              id={userGroupDetails.group.id}
+              slug={userGroupDetails.group.slug}
+            />
           </section>
 
-          <section className=' bg-gray-200 bg-opacity-20 p-4 rounded-md border'>
+          <section className='bg-red-100 bg-opacity-10 p-4 rounded-lg border'>
             <h1 className='raleway font-bold text-xl'>Moments</h1>
             <hr className='border-opacity-25 border-zinc-300 mb-2 mt-1' />
+
+            <p>no moments</p>
           </section>
         </div>
-        {userGroupDetails.group.creatorId === user?.id ? (
-          <DeleteOrLeaveButton value='delete' />
-        ) : (
-          <DeleteOrLeaveButton value='leave' />
-        )}
       </main>
     </>
   )

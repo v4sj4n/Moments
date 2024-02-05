@@ -8,11 +8,16 @@ export default function Message({
   message: string
   time: string
 }) {
+  const date = time.split(' ').slice(0, 5).join(' ')
+  console.log(date)
   return (
-    <div className="mb-2">
+    <div className='mb-2'>
       <div className='flex justify-between'>
-        <h3 className='raleway font-bold'>{sender}</h3>
-        <p className='raleway text-gray-300 text-opacity-50'>{time}</p>
+        <h3 className='raleway font-bold'>
+          <span className='accent-color'>{sender}</span>:
+        </h3>
+
+        <p className='raleway text-gray-300 text-opacity-50'>{date}</p>
       </div>
       <p>{message}</p>
     </div>
