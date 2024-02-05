@@ -13,25 +13,35 @@ export async function generateMetadata({
   params: { slug: string }
 }): Promise<Metadata> {
   const user = await currentUser()
-  const group = await prisma.userGroup.findFirst({
+  const groupObj = await prisma.userGroup.findFirst({
     where: {
       AND: [
         {
-          groupSlug: params.slug,
+          group: {
+            slug: params.slug,
+          },
         },
         {
           userId: user?.id,
         },
       ],
     },
+    select: {
+      group: {
+        select: {
+          title: true,
+          description: true,
+        },
+      },
+    },
   })
-  if (!group) {
+  if (!groupObj) {
     notFound()
   }
 
   return {
-    title: `Leave ${group!.groupTitle} | Moments`,
-    description: `${group!.groupDescription}`,
+    title: `Leave ${groupObj.group.title} | Moments`,
+    description: `${groupObj.group.description}`,
   }
 }
 
