@@ -106,10 +106,15 @@ export const deleteGroup = async (formData: FormData) => {
 
 export const leaveGroup = async (formData: FormData) => {
   const groupId = formData.get('groupId') as string
+  const user = await currentUser()
+  const userId = user!.id
 
-  await prisma.userGroup.deleteMany({
+  await prisma.userGroup.delete({
     where: {
-      groupId,
+      AND : [
+        {groupId},
+        {userId}
+     ]
     },
   })
 
