@@ -34,7 +34,9 @@ export default async function Page({ params }: { params: { slug: string } }) {
     where: {
       AND: [
         {
-          groupSlug: params.slug,
+          group: {
+            slug: params.slug,
+          },
         },
         {
           userId: user?.id,
@@ -167,7 +169,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
             <hr className='border-opacity-25 border-zinc-300 mb-2 mt-1' />
           </section>
         </div>
-        {group.isAdmin ? (
+        {userGroupDetails.group.creatorId === user?.id ? (
           <DeleteOrLeaveButton value='delete' />
         ) : (
           <DeleteOrLeaveButton value='leave' />
