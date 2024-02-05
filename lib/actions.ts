@@ -107,16 +107,29 @@ export const deleteGroup = async (formData: FormData) => {
 export const leaveGroup = async (formData: FormData) => {
   const groupId = formData.get('groupId') as string
   const user = await currentUser()
-  const userId = user!.id
+  const userId = user!.id as string
 
-  await prisma.userGroup.delete({
+  const groupToDelete = await prisma.userGroup.findFirst({
     where: {
-      AND : [
-        {groupId},
-        {userId}
-     ]
+      AND: [
+        {
+          userId: userId,
+        },
+        {
+          groupId: groupId,
+        },
+      ],
     },
   })
+  if (groupToDelete) {
+    await prisma.userGroup.delete({
+      where: {
+        id: groupToDelete?.id,
+      },
+    })
 
-  redirect('/dashboard')
+    redirect('/dashboard')
+  } else {
+    notFound()
+  }
 }
