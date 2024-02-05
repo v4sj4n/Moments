@@ -133,3 +133,30 @@ export const leaveGroup = async (formData: FormData) => {
     notFound()
   }
 }
+
+export const sendMessage = async (formData: FormData) => {
+  const user = await currentUser()
+  const userId = user!.id
+  const groupId = formData.get('groupId') as string
+  const groupSlug = formData.get('groupSlug') as string
+  const message = formData.get('message') as string
+
+  console.log(formData)
+
+  await prisma.message.create({
+    data: {
+      text: message,
+      user: {
+        connect: {
+          id: userId,
+        },
+      },
+      group: {
+        connect: {
+          id: groupId,
+        },
+      },
+    },
+  })
+  redirect(`/group/${groupSlug}`)
+}

@@ -15,6 +15,7 @@ model User {
   username  String      @unique
   Group     Group[]
   UserGroup UserGroup[]
+  Message   Message[]
 }
 
 model Group {
@@ -26,17 +27,23 @@ model Group {
   creatorId   String
   joincode    String      @unique @default(cuid())
   UserGroup   UserGroup[]
+  Message     Message[]
 }
 
 model UserGroup {
-  id     String @unique @default(uuid())
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
-  group  Group  @relation(fields: [groupId], references: [id])
+  id      String @unique @default(uuid())
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String
+  group   Group  @relation(fields: [groupId], references: [id])
+  groupId String
+}
 
-  groupId          String
-  groupTitle       String
-  groupDescription String?
-  groupSlug        String  
-  isAdmin          Boolean @default(false)
+model Message {
+  id        String   @unique @default(uuid())
+  text      String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  group     Group    @relation(fields: [groupId], references: [id])
+  groupId   String
+  createdAt DateTime @default(now())
 }
