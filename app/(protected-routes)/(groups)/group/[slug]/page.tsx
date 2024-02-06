@@ -8,6 +8,8 @@ import DeleteOrLeaveButton from '@/components/DeleteOrLeaveButton'
 import Message from '@/components/Message'
 import { sendMessage } from '@/lib/actions'
 import SendMessageForm from '@/components/SendMessageForm'
+import { supabase } from '@/lib/supabase'
+import Messages from '@/components/Messages'
 
 export async function generateMetadata({
   params,
@@ -62,6 +64,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
     isAdmin: userGroupDetails?.isAdmin,
   }
 
+
   const messagesArr = await prisma.message.findMany({
     where: {
       groupId: userGroupDetails.group?.id,
@@ -101,30 +104,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
         </div>
 
         <div className='grid md:grid-cols-3 gap-4 md:h-[60svh]'>
-          <section className='md:col-span-2 grid grid-rows-7 bg-gray-100 bg-opacity-10 p-4 rounded-lg border'>
-            <div className='row-span-1'>
-              <h1 className='pl-2 raleway font-bold text-xl'>Messages</h1>
-              <hr className='border-opacity-25 border-zinc-300 mb-2 mt-1' />
-            </div>
-            <div className='row-span-6 pl-2 flex flex-col justify-start'>
-              {messagesArr.length > 0 ? (
-                messagesArr.map(({ id, text, user, createdAt }) => (
-                  <Message
-                    key={id}
-                    message={text}
-                    sender={user.username}
-                    time={createdAt.toString()}
-                  />
-                ))
-              ) : (
-                <p className='text-center text-gray-300'>No messages yet</p>
-              )}
-            </div>
-            <SendMessageForm
-              id={userGroupDetails.group.id}
-              slug={userGroupDetails.group.slug}
-            />
-          </section>
+          <Messages groupId={userGroupDetails.group.id} groupSlug={userGroupDetails.group.slug} />
 
           <section className='bg-red-100 bg-opacity-10 p-4 rounded-lg border'>
             <h1 className='raleway font-bold text-xl'>Moments</h1>

@@ -1,5 +1,6 @@
 'use client'
 import { sendMessage } from '@/lib/actions'
+import { useState } from 'react'
 import { useFormStatus } from 'react-dom'
 export default function SendMessageForm({
   id,
@@ -9,8 +10,12 @@ export default function SendMessageForm({
   slug: string
 }) {
   const { pending } = useFormStatus()
+  const [message, setMessage] = useState('')
+  const submitHandler = () => {
+    setMessage("")
+  } 
   return (
-    <form action={sendMessage} className='flex gap-2 col-span-1'>
+    <form action={sendMessage} onSubmit={submitHandler} className='flex gap-2 col-span-1'>
       <input type='hidden' name='groupId' value={id} />
       <input type='hidden' name='groupSlug' value={slug} />
       <input
@@ -18,6 +23,8 @@ export default function SendMessageForm({
         placeholder='Enter a message'
         name='message'
         className='w-full px-4 py-2 bg-transparent border outline-none rounded-md'
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
       />
       {pending ? (
         <button

@@ -1,4 +1,7 @@
 'use client'
+
+import { supabase } from "@/lib/supabase"
+
 export default function Message({
   sender,
   message,
@@ -9,7 +12,7 @@ export default function Message({
   time: string
 }) {
   const date = time.split(' ').slice(0, 5).join(' ')
-  console.log(date)
+
   return (
     <div className='mb-2'>
       <div className='flex justify-between'>
