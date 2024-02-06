@@ -2,7 +2,7 @@
 
 import { supabase } from '@/lib/supabase'
 import Message from './Message'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import SendMessageForm from './SendMessageForm'
 
 type Message = {
@@ -22,6 +22,7 @@ export default function Messages({
   groupSlug: string
 }) {
   const [messagesArr, setMessagesArr] = useState<Message[] | null>([])
+  const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -43,12 +44,67 @@ export default function Messages({
         .order('createdAt', { ascending: true })
 
       const data: Message[] | any = messages.data
-      console.log(data[0])
-      console.log(groupId)
       setMessagesArr(data)
     }
     fetchMessages()
   }, [])
+
+  useEffect(() => {
+    const userFinder = async (id: string) => {
+      const { data, error } = await supabase
+        .from('User')
+        .select('username')
+        .eq('id', id)
+      if (error) {
+        console.log(error)
+      } else {
+        return data[0].username
+      }
+    }
+
+    const channel = supabase
+      .channel('Message')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'Message',
+          filter: `groupId=eq.${groupId}`,
+        },
+        async (payload: any) => {
+          const obj = payload.new
+
+          const user = await userFinder(obj.userId)
+
+          const objToSend: Message = {
+            id: obj.id,
+            text: obj.text,
+            createdAt: obj.createdAt,
+            User: {
+              username: user,
+            },
+          }
+
+          setMessagesArr((prevMessagesArr) => {
+            return prevMessagesArr
+              ? [...prevMessagesArr, objToSend]
+              : [objToSend]
+          })
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [groupId])
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [messagesArr])
 
   return (
     <section className='md:col-span-2 h-[60svh] grid grid-rows-7 bg-gray-100 bg-opacity-10 p-4 rounded-lg border'>
@@ -69,6 +125,7 @@ export default function Messages({
         ) : (
           <p className='text-center text-gray-300'>No messages yet</p>
         )}
+        <div ref={messagesEndRef} />
       </div>
       <SendMessageForm id={groupId} slug={groupSlug} />
     </section>

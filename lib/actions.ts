@@ -88,6 +88,11 @@ export const deleteGroup = async (formData: FormData) => {
       groupId,
     },
   })
+  await prisma.message.deleteMany({
+    where: {
+      groupId,
+    },
+  })
 
   await prisma.group.delete({
     where: {
@@ -136,7 +141,6 @@ export const sendMessage = async (formData: FormData) => {
   const user = await currentUser()
   const userId = user!.id
   const groupId = formData.get('groupId') as string
-  const groupSlug = formData.get('groupSlug') as string
   const message = formData.get('message') as string
 
   await prisma.message.create({
@@ -154,5 +158,4 @@ export const sendMessage = async (formData: FormData) => {
       },
     },
   })
-  redirect(`/group/${groupSlug}`)
 }
