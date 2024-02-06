@@ -1,7 +1,7 @@
 import Navbar from '@/components/Navbar'
 import { currentUser } from '@clerk/nextjs'
-import prisma from '@/lib/prisma'
 import Link from 'next/link'
+import { supabase } from '@/lib/supabase'
 
 export default async function Page() {
   const user = await currentUser()
@@ -13,23 +13,23 @@ export default async function Page() {
     username: user!.username!,
   }
 
-  const isUserInDb = await prisma.user.findUnique({
-    where: {
-      id: userObj.id,
-      username: userObj.username,
-    },
-  })
+  const {data, error} = await supabase
+    .from('User')
+    .select('*')
+    .filter('id', 'eq', userObj.id)
 
-  if (!isUserInDb) {
-    await prisma.user.create({
-      data: {
-        id: userObj.id,
-        firstName: userObj.firstName,
-        lastName: userObj.lastName,
-        email: userObj.email,
-        username: userObj.username,
-      },
+
+  if (data?.length! == 0 && !error) {
+    await supabase.from('User').insert({
+      id: userObj.id,
+      email: userObj.email,
+      firstName: userObj.firstName,
+      lastName: userObj.lastName,
+      username: userObj.username
     })
+  } else {
+    console.log("User is already on db")
+
   }
   return (
     <>

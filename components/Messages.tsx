@@ -7,7 +7,7 @@ import SendMessageForm from './SendMessageForm'
 
 type Message = {
   id: string
-  text: string
+  message: string
   createdAt: string
   User: {
     username: string
@@ -30,7 +30,7 @@ export default function Messages({
         .from('Message')
         .select(
           `id,
-          text,
+          message,
           createdAt,
           User(
             username
@@ -42,8 +42,12 @@ export default function Messages({
         )
         .filter('groupId', 'eq', groupId)
         .order('createdAt', { ascending: true })
+        .limit(200)
+
+      console.log(messages)
 
       const data: Message[] | any = messages.data
+      console.log(data)
       setMessagesArr(data)
     }
     fetchMessages()
@@ -56,7 +60,7 @@ export default function Messages({
         .select('username')
         .eq('id', id)
       if (error) {
-        console.log(error)
+        console.error(error)
       } else {
         return data[0].username
       }
@@ -79,7 +83,7 @@ export default function Messages({
 
           const objToSend: Message = {
             id: obj.id,
-            text: obj.text,
+            message: obj.message,
             createdAt: obj.createdAt,
             User: {
               username: user,
@@ -113,11 +117,11 @@ export default function Messages({
         <hr className='border-opacity-25 border-zinc-300 mb-2 mt-1' />
       </div>
       <div className='row-span-6 pl-2 flex flex-col justify-start overflow-y-auto'>
-        {messagesArr ? (
-          messagesArr.map(({ id, text, User, createdAt }) => (
+        {messagesArr?.length ? (
+          messagesArr.map(({ id, message, User, createdAt }) => (
             <Message
               key={id}
-              message={text}
+              message={message}
               sender={User.username}
               time={createdAt.toString()}
             />

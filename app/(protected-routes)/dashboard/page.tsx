@@ -1,7 +1,18 @@
 import GroupCard from '@/components/GroupCard'
-import prisma from '@/lib/prisma'
+import { supabase } from '@/lib/supabase'
 import { currentUser } from '@clerk/nextjs'
 import Link from 'next/link'
+
+
+
+type GroupObj = {
+Group: {
+  id: string
+  title: string
+  description: string
+  slug: string
+}
+}
 
 export default async function Page() {
   const user = await currentUser()
@@ -13,14 +24,20 @@ export default async function Page() {
     username: user!.username,
   }
 
-  const groupsForUser = await prisma.userGroup.findMany({
-    where: {
-      userId: userObj.id,
-    },
-    select: {
-      group: true,
-    },
-  })
+
+
+  const groupsForUserData: any = await supabase.from("UserGroup").select(
+    `Group(
+      id,
+      title,
+      description,
+      slug
+    )`
+  ).filter('userId',"eq", userObj.id)
+
+  const groupsForUser: GroupObj[] | [] = groupsForUserData.data
+
+  
 
   return (
     <main className='md:mx-20 mx-6 mt-5'>
@@ -43,15 +60,15 @@ export default async function Page() {
           a group
         </p>
       </div>
-      {groupsForUser ? (
+      {groupsForUser.length > 0 ? (
         <div className='grid md:grid-cols-4 grid-cols-1 gap-4'>
           {groupsForUser.map((groupObj) => (
             <GroupCard
-              key={groupObj.group.id}
+              key={groupObj.Group.id}
               group={{
-                title: groupObj.group.title!,
-                description: groupObj.group.description!,
-                slug: groupObj.group.slug!,
+                title: groupObj.Group.title!,
+                description: groupObj.Group.description!,
+                slug: groupObj.Group.slug!,
               }}
             />
           ))}

@@ -1,48 +1,59 @@
 'use server'
 
-import prisma from '@/lib/prisma'
 import { currentUser } from '@clerk/nextjs'
 import { notFound, redirect } from 'next/navigation'
+import { supabase } from './supabase'
 
 export const createGroup = async (formData: FormData) => {
   const user = await currentUser()
   const userId = user!.id
-  const userName = user!.username?.slice(0, 3)
   const title = formData.get('title') as string
   const description = formData.get('description') as string
 
-  const slug = title.split(' ').join('-') + '-' + userName
+  // slug logic
+  let slug = title.split(' ').join('-') + '-' + user!.username?.slice(0, 3)
 
-  const group = await prisma.group.create({
-    data: {
+  const doesSlugExist = await supabase
+    .from('Group')
+    .select('slug')
+    .eq('slug', slug)
+  if (doesSlugExist.data && doesSlugExist.data.length > 0) {
+    slug = slug + '-' + Math.random().toString(36).substring(7)
+  }
+
+  // joincode logic
+  let joinCode = Math.random().toString(36).slice(2)
+
+  const doesJoinCodeExist = await supabase
+    .from('Group')
+    .select('slug')
+    .eq('slug', slug)
+  if (doesJoinCodeExist.data && doesJoinCodeExist.data.length > 0) {
+    joinCode = Math.random().toString(36).slice(2)
+  }
+
+  const groupCreation: any = await supabase
+    .from('Group')
+    .insert({
       title,
       description,
       slug,
-
-      creator: {
-        connect: {
-          id: userId,
-        },
-      },
-    },
-  })
-  if (group) {
-    await prisma.userGroup.create({
-      data: {
-        user: {
-          connect: {
-            id: userId,
-          },
-        },
-        group: {
-          connect: {
-            id: group.id,
-          },
-        },
-        isAdmin: true,
-      },
+      joinCode,
+      creatorId: userId,
     })
-    redirect('/dashboard')
+    .select()
+
+  if (!groupCreation.error) {
+    const userGroupCreation = await supabase.from('UserGroup').insert({
+      userId,
+      groupId: groupCreation.data[0].id,
+      isAdmin: true,
+    })
+    if (!userGroupCreation.error) {
+      redirect('/dashboard')
+    } else {
+      throw new Error("Couldn't create user group")
+    }
   } else {
     throw new Error("Couldn't create group")
   }
@@ -53,28 +64,23 @@ export const joinGroup = async (formData: FormData) => {
   const user = await currentUser()
   const userId = user!.id
 
-  const group = await prisma.group.findFirst({
-    where: {
-      joincode: joinCode,
-    },
-  })
+  const group = await supabase
+    .from('Group')
+    .select('id')
+    .filter('joinCode', 'eq', joinCode)
 
-  if (group) {
-    await prisma.userGroup.create({
-      data: {
-        user: {
-          connect: {
-            id: userId,
-          },
-        },
-        group: {
-          connect: {
-            id: group.id,
-          },
-        },
-      },
+  if (!group.error) {
+    const userAddition = await supabase.from('UserGroup').insert({
+      userId,
+      groupId: group.data[0].id,
+      isAdmin: false,
     })
-    redirect('/dashboard')
+
+    if (!userAddition.error) {
+      redirect('/dashboard')
+    } else {
+      throw new Error("Couldn't add user to group")
+    }
   } else {
     notFound()
   }
@@ -82,24 +88,7 @@ export const joinGroup = async (formData: FormData) => {
 
 export const deleteGroup = async (formData: FormData) => {
   const groupId = formData.get('groupId') as string
-
-  await prisma.userGroup.deleteMany({
-    where: {
-      groupId,
-    },
-  })
-  await prisma.message.deleteMany({
-    where: {
-      groupId,
-    },
-  })
-
-  await prisma.group.delete({
-    where: {
-      id: groupId,
-    },
-  })
-
+  await supabase.from('Group').delete().eq('id', groupId)
   redirect('/dashboard')
 }
 
@@ -108,32 +97,15 @@ export const leaveGroup = async (formData: FormData) => {
   const user = await currentUser()
   const userId = user!.id as string
 
-  const groupToDelete = await prisma.userGroup.findFirst({
-    where: {
-      AND: [
-        {
-          user: {
-            id: userId,
-          },
-        },
-        {
-          group: {
-            id: groupId,
-          },
-        },
-      ],
-    },
-  })
-  if (groupToDelete) {
-    await prisma.userGroup.delete({
-      where: {
-        id: groupToDelete?.id,
-      },
-    })
-
+  const deleteGroup = await supabase
+    .from('UserGroup')
+    .delete()
+    .eq('groupId', groupId)
+    .eq('userId', userId)
+  if (!deleteGroup.error) {
     redirect('/dashboard')
   } else {
-    notFound()
+    throw new Error('Error while leavinf')
   }
 }
 
@@ -143,19 +115,9 @@ export const sendMessage = async (formData: FormData) => {
   const groupId = formData.get('groupId') as string
   const message = formData.get('message') as string
 
-  await prisma.message.create({
-    data: {
-      text: message,
-      user: {
-        connect: {
-          id: userId,
-        },
-      },
-      group: {
-        connect: {
-          id: groupId,
-        },
-      },
-    },
+  await supabase.from('Message').insert({
+    message,
+    userId,
+    groupId,
   })
 }

@@ -11,7 +11,6 @@
   "dependencies": {
     "@clerk/nextjs": "^4.29.5",
     "@clerk/themes": "^1.7.9",
-    "@prisma/client": "^5.9.1",
     "@supabase/supabase-js": "^2.39.3",
     "next": "14.1.0",
     "react": "^18",
@@ -25,7 +24,6 @@
     "eslint": "^8",
     "eslint-config-next": "14.1.0",
     "postcss": "^8",
-    "prisma": "^5.9.1",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"
   }

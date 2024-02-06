@@ -28,7 +28,6 @@ export default async function Page() {
           className='block px-4 py-2 rounded-md bg-transparent border outline-none'
           placeholder='Enter a group description'
           min={3}
-          max={50}
         />
 
         <Button value='Create a group' valueLoading='Creating a group' />

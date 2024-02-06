@@ -1,13 +1,9 @@
 import JoinCodeBtn from '@/components/JoinCodeBtn'
-import prisma from '@/lib/prisma'
 import { currentUser } from '@clerk/nextjs'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Navbar from '@/components/Navbar'
 import DeleteOrLeaveButton from '@/components/DeleteOrLeaveButton'
-import Message from '@/components/Message'
-import { sendMessage } from '@/lib/actions'
-import SendMessageForm from '@/components/SendMessageForm'
 import { supabase } from '@/lib/supabase'
 import Messages from '@/components/Messages'
 
@@ -16,70 +12,64 @@ export async function generateMetadata({
 }: {
   params: { slug: string }
 }): Promise<Metadata> {
-  const group = await prisma.group.findFirst({
-    where: {
-      slug: params.slug,
-    },
-  })
-  if (!group) {
+  const group = await supabase
+    .from('Group')
+    .select(
+      `
+  id,
+  title,
+  description
+  `
+    )
+    .filter('slug', 'eq', params.slug)
+
+  if (!group.error && group.data.length === 0) {
     notFound()
   }
 
   return {
-    title: `${group!.title} | Moments`,
-    description: `${group!.description}`,
+    title: `${group!.data![0].title} | Moments`,
+    description: `${group!.data![0].description}`,
   }
 }
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const user = await currentUser()
-  const userGroupDetails = await prisma.userGroup.findFirst({
-    where: {
-      AND: [
-        {
-          group: {
-            slug: params.slug,
-          },
-        },
-        {
-          userId: user?.id,
-        },
-      ],
-    },
-    select: {
-      group: true,
-      user: true,
-      isAdmin: true,
-    },
-  })
 
-  if (!userGroupDetails) {
+  const userGroupDetails : any = await supabase
+    .from('UserGroup')
+    .select(
+      `
+  Group(
+    id,
+    title,
+    description,
+    joinCode,
+    creatorId
+
+  ),
+  User(
+    id
+  ),
+  isAdmin
+  `
+    )
+    .eq('Group.slug', params.slug)
+    .eq('User.id', user?.id)
+    .not("Group", "is", null)
+
+  if (userGroupDetails.error || userGroupDetails.data.length === 0) {
     notFound()
   }
 
+  
   const group = {
-    title: userGroupDetails?.group?.title,
-    description: userGroupDetails?.group?.description,
-    joinCode: userGroupDetails?.group?.joincode!,
-    isAdmin: userGroupDetails?.isAdmin,
+    id: userGroupDetails?.data[0].Group.id,
+    title: userGroupDetails?.data[0]?.Group.title,
+    description: userGroupDetails?.data[0].Group?.description,
+    joinCode: userGroupDetails?.data[0].Group?.joinCode!,
+    isAdmin: userGroupDetails?.data[0].isAdmin,
   }
-
-
-  const messagesArr = await prisma.message.findMany({
-    where: {
-      groupId: userGroupDetails.group?.id,
-    },
-    select: {
-      id: true,
-      text: true,
-      createdAt: true,
-      user: true,
-    },
-    orderBy: {
-      createdAt: 'asc',
-    },
-  })
-
   return (
     <>
       <Navbar />
@@ -95,7 +85,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
             <JoinCodeBtn joinCode={group.joinCode} />
           </div>
           <div>
-            {userGroupDetails.group.creatorId === user?.id ? (
+            {userGroupDetails?.data[0].Group.creatorId === user?.id ? (
               <DeleteOrLeaveButton value='delete' />
             ) : (
               <DeleteOrLeaveButton value='leave' />
@@ -104,7 +94,10 @@ export default async function Page({ params }: { params: { slug: string } }) {
         </div>
 
         <div className='grid md:grid-cols-3 gap-4 md:h-[60svh]'>
-          <Messages groupId={userGroupDetails.group.id} groupSlug={userGroupDetails.group.slug} />
+          <Messages
+            groupId={userGroupDetails?.data[0].Group.id}
+            groupSlug={userGroupDetails?.data[0].Group.slug}
+          />
 
           <section className='bg-red-100 bg-opacity-10 p-4 rounded-lg border'>
             <h1 className='raleway font-bold text-xl'>Moments</h1>

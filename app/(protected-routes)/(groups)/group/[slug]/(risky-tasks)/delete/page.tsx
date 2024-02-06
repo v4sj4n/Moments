@@ -1,7 +1,7 @@
 import Button from '@/components/Button'
 import Navbar from '@/components/Navbar'
 import { deleteGroup } from '@/lib/actions'
-import prisma from '@/lib/prisma'
+import { supabase } from '@/lib/supabase'
 import { currentUser } from '@clerk/nextjs'
 import { Metadata } from 'next'
 import Link from 'next/link'
@@ -12,49 +12,33 @@ export async function generateMetadata({
 }: {
   params: { slug: string }
 }): Promise<Metadata> {
-  const user = await currentUser()
-  const groupObj = await prisma.userGroup.findFirst({
-    where: {
-      AND: [
-        {
-          group: {
-            slug: params.slug,
-          },
-        },
-        {
-          userId: user?.id,
-        },
-      ],
-    },
-    select: {
-      group: {
-        select: {
-          title: true,
-          description: true,
-        },
-      },
-    },
-  })
-  if (!groupObj) {
+  const group = await supabase
+    .from('Group')
+    .select(
+      `
+  id,
+  title,
+  description
+  `
+    )
+    .filter('slug', 'eq', params.slug)
+
+  if (!group.error && group.data.length === 0) {
     notFound()
   }
 
   return {
-    title: `Delete ${groupObj?.group.title} | Moments`,
-    description: `${groupObj?.group.description}`,
+    title: `Delete ${group!.data![0].title} | Moments`,
+    description: `${group!.data![0].description}`,
   }
 }
 
 export default async function Page({ params }: { params: { slug: string } }) {
-  const group = await prisma.group.findFirst({
-    where: {
-      slug: params.slug,
-    },
-  })
+  const group: any = await supabase.from("Group").select("creatorId, slug,id").filter("slug", "eq", params.slug)
   const user = await currentUser()
 
-  if (group?.creatorId != user?.id) {
-    redirect(`/group/${group?.slug}`)
+  if (group.data[0].creatorId != user?.id) {
+    redirect(`/group/${group.data[0].slug}`)
   }
   return (
     <>
@@ -69,12 +53,12 @@ export default async function Page({ params }: { params: { slug: string } }) {
             type='text'
             name='groupId'
             id='groupId'
-            value={group?.id}
+            value={group.data[0].id}
             hidden
           />
           <Button value='Delete group' valueLoading='Deleting group' />
         </form>
-        <Link className='hover:underline' href={`/group/${group?.slug}`}>
+        <Link className='hover:underline' href={`/group/${group.data[0].slug}`}>
           Go back
         </Link>
       </main>
