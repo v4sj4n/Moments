@@ -22,38 +22,33 @@ export default function Messages({
   groupSlug: string
 }) {
   const [messagesArr, setMessagesArr] = useState<Message[] | null>([])
+
   useEffect(() => {
     const fetchMessages = async () => {
-      const messages = await supabase.from('Message').select(`
-      id,
-      text,
-      createdAt,
-      User(
-        username
-      )
-    `)
+      const messages = await supabase
+        .from('Message')
+        .select(
+          `id,
+          text,
+          createdAt,
+          User(
+            username
+          ),
+          Group(
+            id
+          )
+    `
+        )
+        .filter('groupId', 'eq', groupId)
+        .order('createdAt', { ascending: true })
+
       const data: Message[] | any = messages.data
+      console.log(data[0])
+      console.log(groupId)
       setMessagesArr(data)
     }
     fetchMessages()
-  })
-
-  // realtime implementation is lacking
-  
-  // useEffect(() => {
-  //   const channel = supabase
-  //     .channel('Message')
-  //     .on(
-  //       'postgres_changes',
-  //       { event: 'INSERT', schema: 'public', table: 'Message' },
-  //       (payload) => console.log('hello')
-  //     )
-  //     .subscribe()
-
-  //   return () => {
-  //     supabase.removeChannel(channel)
-  //   }
-  // } )
+  }, [])
 
   return (
     <section className='md:col-span-2 h-[60svh] grid grid-rows-7 bg-gray-100 bg-opacity-10 p-4 rounded-lg border'>
