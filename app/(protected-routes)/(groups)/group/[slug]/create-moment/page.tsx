@@ -18,7 +18,7 @@ export default async function Page({params}: {params: {slug: string}}) {
   return (
     <>
       <Navbar />
-      <main className='md:mx-20 mx-6 mt-5'>
+      <main className='md:mx-20 mx-4 mt-5'>
         <h1 className='raleway md:text-3xl mb-4 text-2xl font-bold '>
           Create your moment to remember
         </h1>

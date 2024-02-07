@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 export default function Navbar() {
   return (
-    <nav className='flex items-center justify-between md:mx-20 mx-6 md:mt-12 mt-2'>
+    <nav className='flex items-center justify-between md:mx-20 mx-4 md:mt-12 mt-2'>
       <Link href='/dashboard'>
         <Image
           src={'/momentsLetterLogo.png'}

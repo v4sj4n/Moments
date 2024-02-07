@@ -40,7 +40,7 @@ export default async function Page() {
   
 
   return (
-    <main className='md:mx-20 mx-6 mt-5'>
+    <main className='md:mx-20 mx-4 mt-5'>
       <div className='md:flex md:justify-between md:items-center md:flex-row flex-col mb-8'>
         <h1 className='raleway text-3xl font-bold '>Dashboard</h1>
         <p className='text-gray-300'>

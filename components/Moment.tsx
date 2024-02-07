@@ -6,7 +6,7 @@ export default function Moment({ moment }: { moment: any }) {
     '/storage/v1/object/public/moment/moments/'
   const description = moment.description.split(" ").slice(0,4).join(" ")+ "..."
   return (
-    <div className='flex justify-between items-center'>
+    <div className='flex justify-between items-center md:flex-row flex-col'>
       <div className='flex gap-x-4 items-center'>
       <Image
         className='rounded-lg'
@@ -20,7 +20,7 @@ export default function Moment({ moment }: { moment: any }) {
         <p className='text-gray-400'>{description}</p>
       </div>
       </div>
-      <p>{moment.date}</p>
+      <p className=''>{moment.date}</p>
     </div>
   )
 }

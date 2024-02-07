@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 export default async function Page() {
   return (
-    <main className='md:mx-20 mx-6 mt-5'>
+    <main className='md:mx-20 mx-4 mt-5'>
       <h1 className='raleway text-3xl font-bold mb-8'>Join a group</h1>
 
       <form action={joinGroup} className='flex flex-col md:w-1/2 lg:w-1/3'>
