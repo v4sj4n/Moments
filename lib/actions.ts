@@ -141,10 +141,10 @@ export const createMoment = async (formData: any) => {
     const momentCreation = await supabase.from('Moment').insert({
       title,
       description,
-      momentImagesList: [ newImageName ],
+      momentImagesList: [newImageName],
       userId,
       groupId,
-      date
+      date,
     })
     console.log(momentCreation)
     if (!momentCreation.error) {
