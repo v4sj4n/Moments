@@ -150,6 +150,7 @@ export const createMoment = async (formData: any) => {
   const fileUpload = await supabase.storage
     .from('moment')
     .upload(`moments/${groupSlug}/${newImageName}`, image)
+
   if (!fileUpload.error) {
     const momentCreation = await supabase.from('Moment').insert({
       title,
@@ -159,10 +160,13 @@ export const createMoment = async (formData: any) => {
       groupId,
       date,
     })
+    console.log(momentCreation)
     if (!momentCreation.error) {
       redirect(`/group/${groupSlug}`)
     } else {
       throw new Error("Couldn't create moment")
     }
+  } else {
+    throw new Error("Couldn't upload image")
   }
 }
