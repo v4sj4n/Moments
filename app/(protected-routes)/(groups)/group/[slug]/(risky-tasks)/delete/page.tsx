@@ -56,6 +56,13 @@ export default async function Page({ params }: { params: { slug: string } }) {
             value={group.data[0].id}
             hidden
           />
+          <input
+            type='text'
+            name='groupSlug'
+            id='groupSlug'
+            value={params.slug}
+            hidden
+          />
           <Button value='Delete group' valueLoading='Deleting group' />
         </form>
         <Link className='hover:underline' href={`/group/${group.data[0].slug}`}>

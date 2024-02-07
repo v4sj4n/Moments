@@ -89,8 +89,21 @@ export const joinGroup = async (formData: FormData) => {
 
 export const deleteGroup = async (formData: FormData) => {
   const groupId = formData.get('groupId') as string
-  await supabase.from('Group').delete().eq('id', groupId)
-  redirect('/dashboard')
+  const groupSlug = formData.get('groupSlug') as string
+
+  // TODO : REMOVE MOMENTS IMAGES
+  // const momentsImagesData = await supabase.from("Moment").select(`
+  // Group(
+  //   id
+  // ),
+  // momentImagesList
+  // `).eq('Group.slug', groupSlug)
+
+  // const imagesToRemoveArray = momentsImagesData.data?.map((x: any) => x.momentImagesList.map((y: string) => `moments/${groupSlug}/${y}`)).flat()
+
+  const delGr = await supabase.from('Group').delete().eq('id', groupId)
+  if (!delGr.error) redirect('/dashboard')
+  else throw new Error("Couldn't delete group")
 }
 
 export const leaveGroup = async (formData: FormData) => {
@@ -136,7 +149,7 @@ export const createMoment = async (formData: any) => {
 
   const fileUpload = await supabase.storage
     .from('moment')
-    .upload(`/moments/${newImageName}`, image)
+    .upload(`moments/${groupSlug}/${newImageName}`, image)
   if (!fileUpload.error) {
     const momentCreation = await supabase.from('Moment').insert({
       title,
