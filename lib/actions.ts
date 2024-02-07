@@ -146,7 +146,6 @@ export const createMoment = async (formData: any) => {
       groupId,
       date,
     })
-    console.log(momentCreation)
     if (!momentCreation.error) {
       redirect(`/group/${groupSlug}`)
     } else {

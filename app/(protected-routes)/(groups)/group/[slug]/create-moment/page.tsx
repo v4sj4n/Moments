@@ -56,9 +56,10 @@ export default async function Page({params}: {params: {slug: string}}) {
             type='date'
             name='date'
             id='date'
+
             className='block px-4 py-2 rounded-md bg-transparent border outline-none'
             placeholder='Moment date'
-            min={3}
+            max={new Date().toISOString().split("T")[0]}
             required
           />
           <label htmlFor='description' className='block raleway text-lg mb-1'>

@@ -4,11 +4,6 @@ import { Suspense } from "react"
 import Moment from "./Moment"
 
 export default async function Moments({ slug }: { slug: string}) {
-  
-
-   
-
-  console.log(slug)
   const moments = await supabase.from("Moment").select(`
   id,
   title,
