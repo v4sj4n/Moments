@@ -63,7 +63,7 @@ export default async function Page({params}: {params: {slug: string}}) {
             required
           />
           <label htmlFor='description' className='block raleway text-lg mb-1'>
-            Image/s (max 4)
+            Image
           </label>
           <input
             type='file'
