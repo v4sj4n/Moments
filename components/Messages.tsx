@@ -110,7 +110,7 @@ export default function Messages({
   }, [messagesArr])
 
   return (
-    <section className='md:col-span-2 h-[60svh] grid grid-rows-7 bg-gray-100 bg-opacity-10 p-4 rounded-lg border'>
+    <section className='md:col-span-2 h-[70svh] grid grid-rows-7 bg-gray-100 bg-opacity-10 p-4 rounded-lg border'>
       <div className='row-span-1'>
         <h1 className='pl-2 raleway font-bold text-xl'>Messages</h1>
         <hr className='border-opacity-25 border-zinc-300 mb-2 mt-1' />

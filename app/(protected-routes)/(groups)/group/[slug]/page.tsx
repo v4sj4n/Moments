@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar'
 import DeleteOrLeaveButton from '@/components/DeleteOrLeaveButton'
 import { supabase } from '@/lib/supabase'
 import Messages from '@/components/Messages'
+import Moments from '@/components/Moments'
 
 export async function generateMetadata({
   params,
@@ -36,7 +37,7 @@ export async function generateMetadata({
 export default async function Page({ params }: { params: { slug: string } }) {
   const user = await currentUser()
 
-  const userGroupDetails : any = await supabase
+  const userGroupDetails: any = await supabase
     .from('UserGroup')
     .select(
       `
@@ -56,13 +57,12 @@ export default async function Page({ params }: { params: { slug: string } }) {
     )
     .eq('Group.slug', params.slug)
     .eq('User.id', user?.id)
-    .not("Group", "is", null)
+    .not('Group', 'is', null)
 
   if (userGroupDetails.error || userGroupDetails.data.length === 0) {
     notFound()
   }
 
-  
   const group = {
     id: userGroupDetails?.data[0].Group.id,
     title: userGroupDetails?.data[0]?.Group.title,
@@ -99,12 +99,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
             groupSlug={userGroupDetails?.data[0].Group.slug}
           />
 
-          <section className='bg-red-100 bg-opacity-10 p-4 rounded-lg border'>
-            <h1 className='raleway font-bold text-xl'>Moments</h1>
-            <hr className='border-opacity-25 border-zinc-300 mb-2 mt-1' />
-
-            <p>no moments</p>
-          </section>
+          <Moments slug={params.slug} />
         </div>
       </main>
     </>

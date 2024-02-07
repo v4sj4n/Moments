@@ -3,6 +3,7 @@
 import { currentUser } from '@clerk/nextjs'
 import { notFound, redirect } from 'next/navigation'
 import { supabase } from './supabase'
+import { v4 as uuidv4 } from 'uuid'
 
 export const createGroup = async (formData: FormData) => {
   const user = await currentUser()
@@ -120,4 +121,36 @@ export const sendMessage = async (formData: FormData) => {
     userId,
     groupId,
   })
+}
+
+export const createMoment = async (formData: any) => {
+  const user = await currentUser()
+  const userId = user?.id
+  let image = formData.get('image') as any
+  const newImageName = uuidv4() + '.' + image.name.split('.').at(-1)
+  const title = formData.get('title') as string
+  const description = formData.get('description') as string
+  const groupId = formData.get('groupId') as string
+  const groupSlug = formData.get('groupSlug') as string
+  const date = formData.get('date') as string
+
+  const fileUpload = await supabase.storage
+    .from('moment')
+    .upload(`/moments/${newImageName}`, image)
+  if (!fileUpload.error) {
+    const momentCreation = await supabase.from('Moment').insert({
+      title,
+      description,
+      momentImagesList: [ newImageName ],
+      userId,
+      groupId,
+      date
+    })
+    console.log(momentCreation)
+    if (!momentCreation.error) {
+      redirect(`/group/${groupSlug}`)
+    } else {
+      throw new Error("Couldn't create moment")
+    }
+  }
 }
