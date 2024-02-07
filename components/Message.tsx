@@ -1,6 +1,5 @@
 'use client'
-
-import { supabase } from "@/lib/supabase"
+import { Trash } from '@phosphor-icons/react'
 
 export default function Message({
   sender,
@@ -11,7 +10,16 @@ export default function Message({
   message: string
   time: string
 }) {
-  const date = time.split(' ').slice(0, 5).join(' ')
+  let options: any = {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+  }
+
+  const date = new Intl.DateTimeFormat('gb-En', options).format(new Date(time))
 
   return (
     <div className='mb-2'>
@@ -22,7 +30,7 @@ export default function Message({
 
         <p className='raleway text-gray-300 text-opacity-50'>{date}</p>
       </div>
-      <p>{message}</p>
+      <p className='break-words col-span-11'>{message}</p>
     </div>
   )
 }

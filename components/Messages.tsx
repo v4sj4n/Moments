@@ -22,6 +22,7 @@ export default function Messages({
   groupSlug: string
 }) {
   const [messagesArr, setMessagesArr] = useState<Message[] | null>([])
+  const [loading, setLoading] = useState<boolean>(true)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -44,11 +45,9 @@ export default function Messages({
         .order('createdAt', { ascending: true })
         .limit(200)
 
-      console.log(messages)
-
       const data: Message[] | any = messages.data
-      console.log(data)
       setMessagesArr(data)
+      setLoading(false)
     }
     fetchMessages()
   }, [])
@@ -117,7 +116,9 @@ export default function Messages({
         <hr className='border-opacity-25 border-zinc-300 mb-2 mt-1' />
       </div>
       <div className='row-span-6 pl-2 flex flex-col justify-start overflow-y-auto'>
-        {messagesArr?.length ? (
+        {loading ? (
+          <p>Loading...</p>
+        ) : messagesArr?.length ? (
           messagesArr.map(({ id, message, User, createdAt }) => (
             <Message
               key={id}
