@@ -3,10 +3,10 @@ import { currentUser } from '@clerk/nextjs'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Navbar from '@/components/Navbar'
-import DeleteOrLeaveButton from '@/components/DeleteOrLeaveButton'
 import { supabase } from '@/lib/supabase'
 import Messages from '@/components/Messages'
 import Moments from '@/components/Moments'
+import Link from 'next/link'
 
 export async function generateMetadata({
   params,
@@ -86,9 +86,19 @@ export default async function Page({ params }: { params: { slug: string } }) {
           </div>
           <div>
             {userGroupDetails?.data[0].Group.creatorId === user?.id ? (
-              <DeleteOrLeaveButton value='delete' />
+              <Link
+                className='px-4 py-2 border-red-200 bg-red-600 rounded-md  inline-block'
+                href={`/group/${params.slug}/delete`}
+              >
+                Delete group
+              </Link>
             ) : (
-              <DeleteOrLeaveButton value='leave' />
+              <Link
+                className='px-4 py-2 border-red-200 bg-red-600 rounded-md  inline-block'
+                href={`/group/${params.slug}/leave`}
+              >
+                Leave group
+              </Link>
             )}
           </div>
         </div>
