@@ -175,3 +175,9 @@ export const  deleteMessage = async (formData: FormData) => {
   const messageId = formData.get('messageId') as string
   await supabase.from('Message').delete().eq('id', messageId)
 }
+export const  editMessage = async (formData: FormData) => {
+  const messageId = formData.get('messageId') as string
+  const message = formData.get('message') as string
+
+  await supabase.from('Message').update({ message }).eq('id', messageId)
+}

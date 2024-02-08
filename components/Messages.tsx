@@ -95,6 +95,7 @@ export default function Messages({
           filter: `groupId=eq.${groupId}`,
         },
         async (payload: any) => {
+          console.log(payload)
           if (payload.eventType === 'INSERT') {
             const obj = payload.new
             const user = await userFinder(obj.userId)
@@ -117,13 +118,31 @@ export default function Messages({
             })
           }
           if (payload.eventType === 'DELETE') {
-            const messageId = payload.old;
+            const messageId = payload.old
 
-setMessagesArr((prevMessagesArr: any) => {
-  return prevMessagesArr?.filter((message: any) => {
-    return message.id !== messageId.id;
-  });
-});
+            setMessagesArr((prevMessagesArr: any) => {
+              return prevMessagesArr?.filter((message: any) => {
+                return message.id !== messageId.id
+              })
+            })
+          }
+
+          if (payload.eventType === "UPDATE"){
+            const obj = payload.new
+            // map through the previous array and when the id matches the  payload.new.id, replace the message with the new message on obj.message
+            setMessagesArr((prevMessagesArr: any) => {
+              return prevMessagesArr?.map((message: any) => {
+                if (message.id === obj.id) {
+                  return {
+                    ...message,
+                    message: obj.message
+                  }
+                } else {
+                  return message
+                }
+              })
+            })
+            // setMessagesArr()
           }
         }
       )
@@ -156,7 +175,7 @@ setMessagesArr((prevMessagesArr: any) => {
               message={message}
               sender={User.username}
               time={createdAt.toString()}
-              editable={editable}
+              myMessage={editable}
               messageId={id}
             />
           ))
