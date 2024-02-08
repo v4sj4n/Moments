@@ -95,7 +95,6 @@ export default function Messages({
           filter: `groupId=eq.${groupId}`,
         },
         async (payload: any) => {
-          console.log(payload)
           if (payload.eventType === 'INSERT') {
             const obj = payload.new
             const user = await userFinder(obj.userId)
@@ -127,7 +126,7 @@ export default function Messages({
             })
           }
 
-          if (payload.eventType === "UPDATE"){
+          if (payload.eventType === 'UPDATE') {
             const obj = payload.new
             // map through the previous array and when the id matches the  payload.new.id, replace the message with the new message on obj.message
             setMessagesArr((prevMessagesArr: any) => {
@@ -135,7 +134,7 @@ export default function Messages({
                 if (message.id === obj.id) {
                   return {
                     ...message,
-                    message: obj.message
+                    message: obj.message,
                   }
                 } else {
                   return message
