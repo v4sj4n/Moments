@@ -4,14 +4,17 @@ import { supabase } from '@/lib/supabase'
 import Message from './Message'
 import { useEffect, useRef, useState } from 'react'
 import SendMessageForm from './SendMessageForm'
+import { useUser } from '@clerk/nextjs'
 
 type Message = {
   id: string
   message: string
   createdAt: string
   User: {
+    id: string
     username: string
   }
+  editable: boolean
 }
 
 export default function Messages({
@@ -24,6 +27,7 @@ export default function Messages({
   const [messagesArr, setMessagesArr] = useState<Message[] | null>([])
   const [loading, setLoading] = useState<boolean>(true)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const userData = useUser()
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -34,6 +38,7 @@ export default function Messages({
           message,
           createdAt,
           User(
+            id,
             username
           ),
           Group(
@@ -45,12 +50,26 @@ export default function Messages({
         .order('createdAt', { ascending: true })
         .limit(200)
 
-      const data: Message[] | any = messages.data
+      const data: Message[] | any = userData.isLoaded
+        ? messages.data!.map((message: any) => {
+            if (message.User.id === userData.user?.id) {
+              return {
+                ...message,
+                editable: true,
+              }
+            } else {
+              return {
+                ...message,
+                editable: false,
+              }
+            }
+          })
+        : null
       setMessagesArr(data)
       setLoading(false)
     }
     fetchMessages()
-  }, [])
+  }, [groupId, userData.isLoaded, userData.user?.id])
 
   useEffect(() => {
     const userFinder = async (id: string) => {
@@ -70,30 +89,42 @@ export default function Messages({
       .on(
         'postgres_changes',
         {
-          event: 'INSERT',
+          event: '*',
           schema: 'public',
           table: 'Message',
           filter: `groupId=eq.${groupId}`,
         },
         async (payload: any) => {
-          const obj = payload.new
+          if (payload.eventType === 'INSERT') {
+            const obj = payload.new
+            const user = await userFinder(obj.userId)
 
-          const user = await userFinder(obj.userId)
+            const objToSend: Message = {
+              id: obj.id,
+              message: obj.message,
+              createdAt: obj.createdAt,
+              User: {
+                id: obj.userId,
+                username: user,
+              },
+              editable: obj.userId === userData.user?.id,
+            }
 
-          const objToSend: Message = {
-            id: obj.id,
-            message: obj.message,
-            createdAt: obj.createdAt,
-            User: {
-              username: user,
-            },
+            setMessagesArr((prevMessagesArr) => {
+              return prevMessagesArr
+                ? [...prevMessagesArr, objToSend]
+                : [objToSend]
+            })
           }
+          if (payload.eventType === 'DELETE') {
+            const messageId = payload.old;
 
-          setMessagesArr((prevMessagesArr) => {
-            return prevMessagesArr
-              ? [...prevMessagesArr, objToSend]
-              : [objToSend]
-          })
+setMessagesArr((prevMessagesArr: any) => {
+  return prevMessagesArr?.filter((message: any) => {
+    return message.id !== messageId.id;
+  });
+});
+          }
         }
       )
       .subscribe()
@@ -101,7 +132,7 @@ export default function Messages({
     return () => {
       supabase.removeChannel(channel)
     }
-  }, [groupId])
+  }, [groupId, userData.user?.id])
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -119,12 +150,14 @@ export default function Messages({
         {loading ? (
           <p>Loading...</p>
         ) : messagesArr?.length ? (
-          messagesArr.map(({ id, message, User, createdAt }) => (
+          messagesArr.map(({ id, message, User, createdAt, editable }) => (
             <Message
               key={id}
               message={message}
               sender={User.username}
               time={createdAt.toString()}
+              editable={editable}
+              messageId={id}
             />
           ))
         ) : (

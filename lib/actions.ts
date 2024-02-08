@@ -160,7 +160,6 @@ export const createMoment = async (formData: any) => {
       groupId,
       date,
     })
-    console.log(momentCreation)
     if (!momentCreation.error) {
       redirect(`/group/${groupSlug}`)
     } else {
@@ -169,4 +168,10 @@ export const createMoment = async (formData: any) => {
   } else {
     throw new Error("Couldn't upload image")
   }
+}
+
+
+export const  deleteMessage = async (formData: FormData) => {
+  const messageId = formData.get('messageId') as string
+  await supabase.from('Message').delete().eq('id', messageId)
 }
