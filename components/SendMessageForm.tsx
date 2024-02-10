@@ -50,6 +50,7 @@ export default function SendMessageForm({
         className='w-full px-4 py-2 bg-transparent border outline-none rounded-md'
         value={message}
         onChange={(e) => setMessage(e.target.value)}
+        required
       />
       <Button />
     </form>

@@ -177,6 +177,23 @@ export const deleteMessage = async (formData: FormData) => {
 export const editMessage = async (formData: FormData) => {
   const messageId = formData.get('messageId') as string
   const message = formData.get('message') as string
+  if (!messageId || !message)
+    throw new Error('No message id or message provided')
 
   await supabase.from('Message').update({ message }).eq('id', messageId)
+}
+
+export const deleteMoment = async (formData: FormData) => {
+  const momentId = formData.get('momentId') as string
+  const slug = formData.get('slug') as string
+  console.log({ momentId, slug })
+  if (!momentId || !slug)
+    throw new Error('No moment id provided or no slug provided')
+  const result = await supabase.from('Moment').delete().eq('id', momentId)
+
+  if (!result.error) {
+    redirect(`/group/${slug}`)
+  } else {
+    throw new Error("Couldn't delete moment")
+  }
 }

@@ -32,7 +32,7 @@ export default async function Moments({ slug }: { slug: string }) {
           {moments.data === null ? (
             <p>No moments</p>
           ) : (
-            <div className='md:h-[60svh] h-[50svh] flex flex-col gap-y-2 overflow-y-auto'>
+            <div className='md:h-[60svh] h-[50svh] flex flex-col gap-y-4 overflow-y-auto'>
               {moments.data.map((moment: any) => (
                 <Moment key={moment.id} moment={moment} slug={slug} />
               ))}
