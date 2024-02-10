@@ -11,6 +11,8 @@ export const createGroup = async (formData: FormData) => {
   const title = formData.get('title') as string
   const description = formData.get('description') as string
 
+  if (!title || !description) throw new Error('Title or description missing')
+
   // slug logic
   let slug = title.split(' ').join('-') + '-' + user!.username?.slice(0, 3)
 
@@ -65,6 +67,7 @@ export const joinGroup = async (formData: FormData) => {
   const user = await currentUser()
   const userId = user!.id
 
+  if (!joinCode) throw new Error('No join code provided')
   const group = await supabase
     .from('Group')
     .select('id')
@@ -91,16 +94,7 @@ export const deleteGroup = async (formData: FormData) => {
   const groupId = formData.get('groupId') as string
   const groupSlug = formData.get('groupSlug') as string
 
-  // TODO : REMOVE MOMENTS IMAGES
-  // const momentsImagesData = await supabase.from("Moment").select(`
-  // Group(
-  //   id
-  // ),
-  // momentImagesList
-  // `).eq('Group.slug', groupSlug)
-
-  // const imagesToRemoveArray = momentsImagesData.data?.map((x: any) => x.momentImagesList.map((y: string) => `moments/${groupSlug}/${y}`)).flat()
-
+  if (!groupId) throw new Error('No group id')
   const delGr = await supabase.from('Group').delete().eq('id', groupId)
   if (!delGr.error) redirect('/dashboard')
   else throw new Error("Couldn't delete group")
@@ -108,6 +102,7 @@ export const deleteGroup = async (formData: FormData) => {
 
 export const leaveGroup = async (formData: FormData) => {
   const groupId = formData.get('groupId') as string
+  if (!groupId) throw new Error('No group id provided')
   const user = await currentUser()
   const userId = user!.id as string
 
@@ -129,6 +124,8 @@ export const sendMessage = async (formData: FormData) => {
   const groupId = formData.get('groupId') as string
   const message = formData.get('message') as string
 
+  if (!message || !groupId) throw new Error('Missing data')
+
   await supabase.from('Message').insert({
     message,
     userId,
@@ -147,6 +144,8 @@ export const createMoment = async (formData: any) => {
   const groupSlug = formData.get('groupSlug') as string
   const date = formData.get('date') as string
 
+  if (!title || !description || !groupId || !groupSlug || !date || !image)
+    throw new Error('Missing data')
   const fileUpload = await supabase.storage
     .from('moment')
     .upload(`moments/${groupSlug}/${newImageName}`, image)
@@ -170,12 +169,12 @@ export const createMoment = async (formData: any) => {
   }
 }
 
-
-export const  deleteMessage = async (formData: FormData) => {
+export const deleteMessage = async (formData: FormData) => {
   const messageId = formData.get('messageId') as string
+  if (!messageId) throw new Error('No message id provided')
   await supabase.from('Message').delete().eq('id', messageId)
 }
-export const  editMessage = async (formData: FormData) => {
+export const editMessage = async (formData: FormData) => {
   const messageId = formData.get('messageId') as string
   const message = formData.get('message') as string
 
