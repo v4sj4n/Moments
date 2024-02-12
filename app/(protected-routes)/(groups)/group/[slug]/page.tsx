@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabase'
 import Messages from '@/components/Messages'
 import Moments from '@/components/Moments'
 import Link from 'next/link'
+import CreateMomentModal from '@/components/CreateMomentModal'
 
 export async function generateMetadata({
   params,
@@ -109,7 +110,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
             groupSlug={userGroupDetails?.data[0].Group.slug}
           />
 
-          <Moments slug={params.slug} />
+          <Moments slug={params.slug} groupId={group.id}/>
         </div>
       </main>
     </>

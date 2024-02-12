@@ -1,9 +1,14 @@
 import { supabase } from '@/lib/supabase'
-import Link from 'next/link'
 import { Suspense } from 'react'
 import Moment from './Moment'
+import ModalOpener from './ModalOpener'
 
-export default async function Moments({ slug }: { slug: string }) {
+type Props = {
+  slug: string
+  groupId: string
+}
+
+export default async function Moments({ slug, groupId }: Props) {
   const moments = await supabase
     .from('Moment')
     .select(
@@ -40,12 +45,7 @@ export default async function Moments({ slug }: { slug: string }) {
           )}
         </Suspense>
       </div>
-      <Link
-        className='self-end w-full bg-zinc-200 border rounded-md text-zinc-700 px-4 py-2 text-center font-bold'
-        href={`/group/${slug}/create-moment`}
-      >
-        Create a moment
-      </Link>
+      <ModalOpener slug={slug} groupId={groupId} />
     </section>
   )
 }
