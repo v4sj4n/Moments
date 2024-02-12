@@ -1,5 +1,5 @@
 'use client'
-import { FormEvent, Fragment, useRef, useState } from 'react'
+import { Fragment, useRef, useState } from 'react'
 import Image from 'next/image'
 
 import React from 'react'
@@ -89,7 +89,7 @@ function CreateMomentModal({ isOpen, closeModal, groupId, slug }: Props) {
                     name='title'
                     id='title'
                     placeholder='Enter a title here...'
-                    className='w-full border border-gray-300 text-zinc-800 rounded-md outline-none p-5'
+                    className='w-full border border-gray-300 text-zinc-800 rounded-md outline-none p-5 focus:border-4 focus:border-red-400'
                     min={3}
                     max={50}
                     required
@@ -101,7 +101,7 @@ function CreateMomentModal({ isOpen, closeModal, groupId, slug }: Props) {
                     name='description'
                     id='description'
                     placeholder='Enter a description here...'
-                    className='w-full border border-gray-300 text-zinc-800 rounded-md outline-none p-5'
+                    className='w-full border border-gray-300 text-zinc-800 rounded-md outline-none p-5 focus:border-4 focus:border-red-400'
                     min={3}
                     required
                   />
@@ -112,7 +112,7 @@ function CreateMomentModal({ isOpen, closeModal, groupId, slug }: Props) {
                     name='date'
                     id='date'
                     placeholder='Enter a title here...'
-                    className='w-full border border-gray-300 text-zinc-800 rounded-md outline-none p-5'
+                    className='w-full border border-gray-300 text-zinc-800 rounded-md outline-none p-5 focus:border-4 focus:border-red-400'
                   />
                 </div>
 
@@ -131,7 +131,7 @@ function CreateMomentModal({ isOpen, closeModal, groupId, slug }: Props) {
                     }}
                   />
                   <button
-                    className={`flex items-center gap-x-2 w-full border border-gray-300 text-zinc-800 bg-white rounded-md outline-none p-5 ${
+                    className={`flex items-center gap-x-2 w-full border border-gray-300 text-zinc-800 bg-white rounded-md outline-none p-5 focus:border-4 focus:border-red-400 ${
                       image ? 'hidden' : ''
                     }`}
                     type='button'

@@ -179,6 +179,14 @@ export const createMoment = async (formData: any) => {
 
   if (!title || !description || !groupId || !groupSlug || !date || !image)
     throw new Error('Missing data')
+
+  const selectedDate = new Date(date)
+  const today = new Date()
+
+  if (selectedDate > today) {
+    throw new Error('The selected date cannot be in the future.')
+  }
+
   const fileUpload = await supabase.storage
     .from('moment')
     .upload(`moments/${groupSlug}/${newImageName}`, image)
@@ -219,32 +227,26 @@ export const editMessage = async (formData: FormData) => {
 export const deleteMoment = async (formData: FormData) => {
   const momentId = formData.get('momentId') as string
   const slug = formData.get('slug') as string
+
   if (!momentId || !slug)
     throw new Error('No moment id provided or no slug provided')
   const result = await supabase
     .from('Moment')
-    .select(
-      `
-    momentImagesList,
-    id,
-    title
-    
-    `
-    )
+    .select('id, title, momentImagesList')
     .eq('id', momentId)
 
-  const image: string = result.data![0].momentImagesList[0]
   const imageToDelete = await supabase.storage
     .from('moment')
-    .remove([`moments/${slug}/${image}`])
+    .remove([`moments/${slug}/${result.data![0].momentImagesList[0]}`])
 
   if (!imageToDelete.error) {
     const momentToDelete = await supabase
       .from('Moment')
       .delete()
       .eq('id', momentId)
+
     if (!momentToDelete.error) {
-      redirect(`/group/${slug}`)
+      return "Success"
     } else {
       throw new Error("Couldn't delete moment")
     }

@@ -2,7 +2,6 @@
 import { supabase } from '@/lib/supabase'
 import { Suspense, useEffect, useState } from 'react'
 import Moment from './Moment'
-import ModalOpener from './ModalOpener'
 import CreateMomentModal from './CreateMomentModal'
 
 type Props = {
@@ -12,6 +11,7 @@ type Props = {
 
 export default function Moments({ slug, groupId }: Props) {
   const [isOpen, setIsOpen] = useState(false)
+  const [num, setNum] = useState(1)
 
   const closeModal = () => setIsOpen(false)
   const [moments, setMoments] = useState<any[]>([])
@@ -59,8 +59,7 @@ export default function Moments({ slug, groupId }: Props) {
             ) : (
               <div className='md:h-[60svh] h-[50svh] flex flex-col gap-y-4 overflow-y-auto'>
                 {moments.map((moment: any) => (
-                  <Moment key={moment.id} moment={moment} slug={slug} />
-                ))}
+                  <Moment key={moment.id} moment={moment} slug={slug} setMoments={setMoments} />                ))}
               </div>
             )}
           </Suspense>

@@ -7,7 +7,6 @@ import { supabase } from '@/lib/supabase'
 import Messages from '@/components/Messages'
 import Moments from '@/components/Moments'
 import Link from 'next/link'
-import CreateMomentModal from '@/components/CreateMomentModal'
 
 export async function generateMetadata({
   params,

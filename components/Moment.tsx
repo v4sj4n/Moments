@@ -1,18 +1,23 @@
+'use client'
 import { deleteMoment } from '@/lib/actions'
 import { TrashSimple } from '@phosphor-icons/react/dist/ssr'
 import Image from 'next/image'
+import { Dispatch, SetStateAction } from 'react'
 
 export default function Moment({
   moment,
   slug,
+  setMoments,
 }: {
   moment: any
   slug: string
+  setMoments: Dispatch<React.SetStateAction<any[]>>
 }) {
   const imageDir = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/moment/moments/${slug}/`
   const image = imageDir + moment.momentImagesList[0]
   const description =
     moment.description.split(' ').slice(0, 4).join(' ') + '...'
+
   return (
     <div className='flex justify-between items-center md:flex-row flex-col'>
       <div className='w-full flex justify-between  items-center'>
@@ -30,7 +35,16 @@ export default function Moment({
             <p className='sm:block hidden'>{moment.date}</p>
           </div>
         </div>
-        <form action={deleteMoment}>
+        <form
+          action={async (formData: FormData) => {
+            const res = await deleteMoment(formData)
+            if (res == 'Success') {
+              setMoments((prevMoments) =>
+                prevMoments.filter((element) => element.id !== moment.id)
+              )
+            }
+          }}
+        >
           <input type='hidden' name='momentId' value={moment.id} />
           <input type='hidden' name='slug' value={slug} />
           <button type='submit'>
