@@ -104,7 +104,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
           </div>
         </div>
 
-        <div className='grid lg:grid-cols-3 gap-4 md:h-[60svh]'>
+        <div className='grid grid-cols-1 lg:grid-cols-3 lg:gap-x-4 gap-y-4 md:h-[60svh]'>
           <Messages
             groupId={userGroupDetails?.data[0].Group.id}
             groupSlug={userGroupDetails?.data[0].Group.slug}

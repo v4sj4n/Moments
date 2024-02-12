@@ -29,7 +29,7 @@ export default async function Moments({ slug, groupId }: Props) {
     .not('Group', 'is', null)
 
   return (
-    <section className='h-[70svh] grid grid-rows-12 bg-gray-100 bg-opacity-10 p-4 rounded-lg border '>
+    <section className='h-[70svh] grid grid-rows-12 bg-gray-100 bg-opacity-10 p-4 rounded-lg border  '>
       <div className='row-span-11'>
         <h1 className='raleway font-bold text-xl'>Moments</h1>
         <hr className='border-opacity-25 border-zinc-300 mb-2 mt-1' />

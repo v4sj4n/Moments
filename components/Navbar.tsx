@@ -10,14 +10,16 @@ export default function Navbar() {
                     top-0
                     left-0
                     w-full
-                    h-full
+                    lg:h-full
+                    md:h-[175svh]
+                    h-[180svh]
                     bg-gradient-to-br
                     from-[#F46464]
                     to-[#5d2ce2]
                     rounded-md
                     filter
                     blur-3xl
-                    opacity-25
+                    opacity-30
                     -z-50
       '
       />
