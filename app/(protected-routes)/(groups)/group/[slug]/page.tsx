@@ -110,7 +110,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
             groupSlug={userGroupDetails?.data[0].Group.slug}
           />
 
-          <Moments slug={params.slug} groupId={group.id}/>
+          <Moments slug={params.slug} groupId={group.id} />
         </div>
       </main>
     </>

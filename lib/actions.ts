@@ -95,9 +95,41 @@ export const deleteGroup = async (formData: FormData) => {
   const groupSlug = formData.get('groupSlug') as string
 
   if (!groupId) throw new Error('No group id')
-  const delGr = await supabase.from('Group').delete().eq('id', groupId)
-  if (!delGr.error) redirect('/dashboard')
-  else throw new Error("Couldn't delete group")
+  const groupImages = await supabase
+    .from('Moment')
+    .select(
+      `
+  Group(
+    id,
+    slug
+    ),
+    momentImagesList
+    `
+    )
+    .eq('Group.id', groupId)
+    .not('Group', 'is', null)
+
+  const arrWithImagesToDelete = <string[]>[]
+  groupImages.data?.forEach((el: any) => {
+    arrWithImagesToDelete.push(
+      `moments/${el.Group.slug!}/${el.momentImagesList[0]}`
+    )
+  })
+
+  const imagesDeletion = await supabase.storage
+    .from('moment')
+    .remove(arrWithImagesToDelete)
+
+  if (!imagesDeletion.error) {
+    const delGr = await supabase.from('Group').delete().eq('id', groupId)
+    if (!delGr.error) {
+      redirect('/')
+    } else {
+      throw new Error('Error while leavinf')
+    }
+  } else {
+    throw new Error('Error while leavinf')
+  }
 }
 
 export const leaveGroup = async (formData: FormData) => {
@@ -106,12 +138,13 @@ export const leaveGroup = async (formData: FormData) => {
   const user = await currentUser()
   const userId = user!.id as string
 
-  const deleteGroup = await supabase
+  const deleteUserGroup = await supabase
     .from('UserGroup')
     .delete()
     .eq('groupId', groupId)
     .eq('userId', userId)
-  if (!deleteGroup.error) {
+
+  if (!deleteUserGroup.error) {
     redirect('/dashboard')
   } else {
     throw new Error('Error while leavinf')
@@ -188,10 +221,33 @@ export const deleteMoment = async (formData: FormData) => {
   const slug = formData.get('slug') as string
   if (!momentId || !slug)
     throw new Error('No moment id provided or no slug provided')
-  const result = await supabase.from('Moment').delete().eq('id', momentId)
+  const result = await supabase
+    .from('Moment')
+    .select(
+      `
+    momentImagesList,
+    id,
+    title
+    
+    `
+    )
+    .eq('id', momentId)
 
-  if (!result.error) {
-    redirect(`/group/${slug}`)
+  const image: string = result.data![0].momentImagesList[0]
+  const imageToDelete = await supabase.storage
+    .from('moment')
+    .remove([`moments/${slug}/${image}`])
+
+  if (!imageToDelete.error) {
+    const momentToDelete = await supabase
+      .from('Moment')
+      .delete()
+      .eq('id', momentId)
+    if (!momentToDelete.error) {
+      redirect(`/group/${slug}`)
+    } else {
+      throw new Error("Couldn't delete moment")
+    }
   } else {
     throw new Error("Couldn't delete moment")
   }
