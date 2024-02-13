@@ -111,7 +111,7 @@ export const deleteGroup = async (formData: FormData) => {
 
    const arrWithImagesToDelete = <string[]>[]
 
-   if (groupImages.data.length > 0) {
+   if (groupImage.data !== null || groupImages.data.length > 0) {
       groupImages.data?.forEach((el: any) => {
          arrWithImagesToDelete.push(
             `moments/${el.Group.slug!}/${el.momentImagesList[0]}`
