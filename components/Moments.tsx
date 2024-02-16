@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabase'
 import { Suspense, useEffect, useState } from 'react'
 import Moment from './Moment'
 import CreateMomentModal from './CreateMomentModal'
+import { useAuth } from '@clerk/nextjs'
 
 type Props = {
   slug: string
@@ -11,10 +12,13 @@ type Props = {
 
 export default function Moments({ slug, groupId }: Props) {
   const [isOpen, setIsOpen] = useState(false)
-  const [num, setNum] = useState(1)
 
   const closeModal = () => setIsOpen(false)
   const [moments, setMoments] = useState<any[]>([])
+
+  const user = useAuth()
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null)
+
   useEffect(() => {
     const fetchMoments = async () => {
       const moments = await supabase
@@ -38,8 +42,32 @@ export default function Moments({ slug, groupId }: Props) {
 
       setMoments(moments.data!)
     }
+
+    const fetchIsAdmin = async () => {
+      const isAdmin = await supabase
+        .from('UserGroup')
+        .select(
+          `
+        Group(
+          slug
+        ),
+        User(
+          id
+        ),
+        isAdmin
+        `
+        )
+        .eq('Group.slug', slug)
+        .eq('User.id', user.userId)
+        .not('Group', 'is', null)
+        .not('User', 'is', null)
+
+      setIsAdmin(isAdmin.data![0].isAdmin)
+    }
     fetchMoments()
-  }, [slug, isOpen])
+    fetchIsAdmin()
+  }, [isOpen, slug, user.userId])
+
 
   return (
     <>
@@ -59,7 +87,14 @@ export default function Moments({ slug, groupId }: Props) {
             ) : (
               <div className='md:h-[60svh] h-[50svh] flex flex-col gap-y-4 overflow-y-auto'>
                 {moments.map((moment: any) => (
-                  <Moment key={moment.id} moment={moment} slug={slug} setMoments={setMoments} />                ))}
+                  <Moment
+                    key={moment.id}
+                    moment={moment}
+                    slug={slug}
+                    setMoments={setMoments}
+                    isAdmin={isAdmin}
+                  />
+                ))}
               </div>
             )}
           </Suspense>

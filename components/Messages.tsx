@@ -128,7 +128,6 @@ export default function Messages({
 
           if (payload.eventType === 'UPDATE') {
             const obj = payload.new
-            // map through the previous array and when the id matches the  payload.new.id, replace the message with the new message on obj.message
             setMessagesArr((prevMessagesArr: any) => {
               return prevMessagesArr?.map((message: any) => {
                 if (message.id === obj.id) {
@@ -141,7 +140,6 @@ export default function Messages({
                 }
               })
             })
-            // setMessagesArr()
           }
         }
       )

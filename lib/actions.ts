@@ -264,3 +264,117 @@ export const deleteMoment = async (formData: FormData) => {
     throw new Error("Couldn't delete moment")
   }
 }
+
+export const makeAdmin = async (formData: FormData) => {
+  const user = await currentUser()
+  const userId = user!.id
+
+
+  const userRecord = formData.get('userAdminRecord')
+  const groupSlug = formData.get('groupSlug')
+  const currentUserStatusOnGroup = await supabase
+    .from('UserGroup')
+    .select(
+      `
+  id,
+  isAdmin,
+  Group(
+    id,
+    slug,
+    creatorId
+  ),
+  User(
+    id,
+    username
+  )
+  `
+    )
+    .eq('Group.slug', groupSlug)
+    .eq('User.id', userId)
+    .not('User', 'is', null)
+    .not('Group', 'is', null)
+
+
+ 
+  if (
+    !currentUserStatusOnGroup.error === null ||
+    currentUserStatusOnGroup.data!.length === 1
+  ) {
+    if (currentUserStatusOnGroup.data![0].isAdmin) {
+      const addUserAsAdmin = await supabase
+        .from('UserGroup')
+        .update({
+          isAdmin: true,
+        })
+        .eq('id', userRecord)
+        .returns()
+      if (!addUserAsAdmin.error) {
+        redirect(`/group/${groupSlug}`)
+      }
+    }
+  }
+}
+export const removeAdmin = async (formData: FormData) => {
+  const user = await currentUser()
+  const userId = user!.id
+
+  const userRecord = formData.get('userAdminRecord')
+  const groupSlug = formData.get('groupSlug')
+  const currentUserStatusOnGroup = await supabase
+    .from('UserGroup')
+    .select(
+      `
+  id,
+  isAdmin,
+  Group(
+    id,
+    slug,
+    creatorId
+  ),
+  User(
+    id,
+    username
+  )
+  `
+    )
+    .eq('Group.slug', groupSlug)
+    .eq('User.id', userId)
+    .not('User', 'is', null)
+    .not('Group', 'is', null)
+
+  const isUserToRemoveAdmin = await supabase
+    .from('UserGroup')
+    .select(
+      `id,
+  isAdmin,
+  Group(
+    creatorId,
+    slug
+  ),
+  User(
+    id,
+    username
+  )`
+    )
+    .eq('id', userRecord)
+
+  if (
+    !currentUserStatusOnGroup.error === null ||
+    currentUserStatusOnGroup.data!.length === 1
+  ) {
+    const data: any = isUserToRemoveAdmin.data![0]
+
+    if (data.User.id !== data.Group.creatorId) {
+      const removeUserAsAdmin = await supabase
+        .from('UserGroup')
+        .update({
+          isAdmin: false,
+        })
+        .eq('id', userRecord)
+        .returns()
+      if (!removeUserAsAdmin.error) {
+        redirect(`/group/${groupSlug}`)
+      }
+    }
+  }
+}

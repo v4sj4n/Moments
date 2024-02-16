@@ -8,15 +8,16 @@ export default function Moment({
   moment,
   slug,
   setMoments,
+  isAdmin,
 }: {
   moment: any
   slug: string
   setMoments: Dispatch<React.SetStateAction<any[]>>
+  isAdmin: boolean | null
 }) {
   const imageDir = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/moment/moments/${slug}/`
   const image = imageDir + moment.momentImagesList[0]
-  const description =
-    moment.description.split(' ').slice(0, 4).join(' ') + '...'
+
 
   return (
     <div className='flex justify-between items-center md:flex-row flex-col'>
@@ -31,26 +32,28 @@ export default function Moment({
           />
           <div>
             <h2 className='text-xl font-bold raleway'>{moment.title}</h2>
-            <p className='text-gray-400'>{description}</p>
+            <p className='text-gray-400 truncate'>{moment.description}</p>
             <p className='sm:block hidden'>{moment.date}</p>
           </div>
         </div>
-        <form
-          action={async (formData: FormData) => {
-            const res = await deleteMoment(formData)
-            if (res == 'Success') {
-              setMoments((prevMoments) =>
-                prevMoments.filter((element) => element.id !== moment.id)
-              )
-            }
-          }}
-        >
-          <input type='hidden' name='momentId' value={moment.id} />
-          <input type='hidden' name='slug' value={slug} />
-          <button type='submit'>
-            <TrashSimple className='text-red-600 mt-2' size={20} />
-          </button>
-        </form>
+        {isAdmin && (
+          <form
+            action={async (formData: FormData) => {
+              const res = await deleteMoment(formData)
+              if (res == 'Success') {
+                setMoments((prevMoments) =>
+                  prevMoments.filter((element) => element.id !== moment.id)
+                )
+              }
+            }}
+          >
+            <input type='hidden' name='momentId' value={moment.id} />
+            <input type='hidden' name='slug' value={slug} />
+            <button type='submit'>
+              <TrashSimple className='text-red-600 mt-2' size={20} />
+            </button>
+          </form>
+        )}
       </div>
     </div>
   )

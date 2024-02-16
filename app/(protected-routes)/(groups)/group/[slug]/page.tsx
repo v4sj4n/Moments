@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabase'
 import Messages from '@/components/Messages'
 import Moments from '@/components/Moments'
 import Link from 'next/link'
+import SeeMembersButton from '@/components/SeeMembersButton'
 
 export async function generateMetadata({
   params,
@@ -82,6 +83,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
             <p className='raleway text-md text-gray-300 group-description lowercase'>
               {group.description}
             </p>
+            <SeeMembersButton slug={params.slug} groupId={group.id} />
             <JoinCodeBtn joinCode={group.joinCode} />
           </div>
           <div>
