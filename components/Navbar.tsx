@@ -6,13 +6,12 @@ export default function Navbar() {
   return (
     <nav className='flex items-center justify-between md:mx-20 mx-4 md:mt-12 mt-2'>
       <div
-        className='absolute 
+        className='fixed 
+                    bg-fixed
                     top-0
                     left-0
                     w-full
-                    lg:h-full
-                    md:h-[175svh]
-                    h-[180svh]
+                    h-full
                     bg-gradient-to-br
                     from-[#F46464]
                     to-[#5d2ce2]
@@ -21,6 +20,7 @@ export default function Navbar() {
                     blur-3xl
                     opacity-30
                     -z-50
+                  
       '
       />
       <Link href='/dashboard'>
