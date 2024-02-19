@@ -168,8 +168,6 @@ export default function Messages({
           </div>
         ) : messagesArr?.length ? (
           <div className='flex flex-1 flex-col gap-y-4 overflow-y-auto'>
-            {' '}
-            {/* //ignore ts-error */}
             {messagesArr.map(({ id, message, User, createdAt, editable }) => (
               <Message
                 key={id}
@@ -194,6 +192,3 @@ export default function Messages({
     </section>
   )
 }
-
-
-

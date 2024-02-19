@@ -15,7 +15,6 @@ export default function Moments({ slug, groupId }: Props) {
 
   const [loading, setLoading] = useState<boolean>(true)
 
-
   const closeModal = () => setIsOpen(false)
   const [moments, setMoments] = useState<any[]>([])
 
@@ -82,30 +81,30 @@ export default function Moments({ slug, groupId }: Props) {
         groupId={groupId}
       />
       <section className='h-[70svh] sm:h-[65svh]  flex flex-col gap-y-2 bg-gray-100 bg-opacity-10 p-4 rounded-lg border'>
-          <h1 className='pl-2 raleway tracking-tight font-bold text-2xl'>
-            Moments
-          </h1>
-            {loading ? (
-               <div className='h-full flex-1 flex-col overflow-y-auto'>
-               <p className='pl-2 text-white opacity-50 text-sm'>Loading...</p>
-             </div>
-            )  : moments.length === 0 || moments === null ? (
-              <div className='h-full flex-1 flex-col overflow-y-auto'>
-                <p className='pl-2 text-white opacity-50 text-sm'>No moments...</p>
-              </div>
-            ) : (
-              <div className=' flex flex-1 flex-col gap-y-4 overflow-y-auto'>
-                {moments.map((moment: any) => (
-                  <Moment
-                    key={moment.id}
-                    moment={moment}
-                    slug={slug}
-                    setMoments={setMoments}
-                    isAdmin={isAdmin}
-                  />
-                ))}
-              </div>
-            )}
+        <h1 className='pl-2 raleway tracking-tight font-bold text-2xl'>
+          Moments
+        </h1>
+        {loading ? (
+          <div className='h-full flex-1 flex-col overflow-y-auto'>
+            <p className='pl-2 text-white opacity-50 text-sm'>Loading...</p>
+          </div>
+        ) : moments.length === 0 || moments === null ? (
+          <div className='h-full flex-1 flex-col overflow-y-auto'>
+            <p className='pl-2 text-white opacity-50 text-sm'>No moments...</p>
+          </div>
+        ) : (
+          <div className=' flex flex-1 flex-col gap-y-4 overflow-y-auto'>
+            {moments.map((moment: any) => (
+              <Moment
+                key={moment.id}
+                moment={moment}
+                slug={slug}
+                setMoments={setMoments}
+                isAdmin={isAdmin}
+              />
+            ))}
+          </div>
+        )}
         <button
           className=' w-full bg-zinc-200 border rounded-md text-zinc-700 px-4 py-2  text-center font-bold'
           onClick={() => setIsOpen(true)}
