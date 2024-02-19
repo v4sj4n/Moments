@@ -1,9 +1,10 @@
 'use client'
 import { supabase } from '@/lib/supabase'
-import { Suspense, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Moment from './Moment'
 import CreateMomentModal from './CreateMomentModal'
 import { useAuth } from '@clerk/nextjs'
+import { motion } from 'framer-motion'
 
 type Props = {
   slug: string
@@ -80,7 +81,15 @@ export default function Moments({ slug, groupId }: Props) {
         slug={slug}
         groupId={groupId}
       />
-      <section className='h-[70svh] sm:h-[65svh]  flex flex-col gap-y-2 bg-gray-100 bg-opacity-10 p-4 rounded-lg border'>
+      <motion.section
+      className='h-[70svh] sm:h-[65svh]  flex flex-col gap-y-2 bg-gray-100 bg-opacity-10 p-4 rounded-lg border'
+      initial={{ y: '-100%', opacity: 0 }}
+      animate={{ y: '0%', opacity: 1 }}
+      transition={{
+        ease: 'linear',
+        duration: 0.5,
+      }}
+    >
         <h1 className='pl-2 raleway tracking-tight font-bold text-2xl'>
           Moments
         </h1>
@@ -111,7 +120,7 @@ export default function Moments({ slug, groupId }: Props) {
         >
           Create a moment
         </button>
-      </section>
+      </motion.section>
     </>
   )
 }

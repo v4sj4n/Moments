@@ -36,15 +36,7 @@ export default function Message({
   const [isToBeEditted, setIsToBeEditted] = useState<boolean>(false)
 
   return (
-    <motion.div
-      className='duration-300 mb-2'
-      initial={{ y: '-100%', opacity: 0 }}
-      animate={{ y: '0%', opacity: 1 }}
-      transition={{
-        ease: 'linear',
-        duration: 0,
-      }}
-    >
+    <div className='mb-2'>
       {!isToBeEditted ? (
         <div className='flex justify-between'>
           <div>
@@ -112,6 +104,6 @@ export default function Message({
           </div>
         </form>
       )}
-    </motion.div>
+    </div>
   )
 }
