@@ -32,7 +32,7 @@ export default function Moment({
           />
           <div>
             <h2 className='text-xl font-bold raleway'>{moment.title}</h2>
-            <p className='text-gray-400 truncate'>{moment.description}</p>
+            <p className='text-gray-400 text-ellipsis	'>{moment.description}</p>
             <p className='sm:block hidden'>{moment.date}</p>
           </div>
         </div>

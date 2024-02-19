@@ -66,9 +66,9 @@ export default function Messages({
           })
         : null
       setMessagesArr(data)
-      setLoading(false)
     }
     fetchMessages()
+    setLoading(false)
   }, [groupId, userData.isLoaded, userData.user?.id])
 
   useEffect(() => {
@@ -157,31 +157,43 @@ export default function Messages({
   }, [messagesArr])
 
   return (
-    <section className='md:col-span-2 h-[70svh] grid grid-rows-7 bg-gray-100 bg-opacity-10 p-4 rounded-lg border'>
-      <div className='row-span-1'>
-        <h1 className='pl-2 raleway font-bold text-xl'>Messages</h1>
-        <hr className='border-opacity-25 border-zinc-300 mb-2 mt-1' />
-      </div>
-      <div className='row-span-6 pl-2 flex flex-col justify-start overflow-y-auto'>
+    <section className='h-[70svh] sm:h-[65svh] col-span-2 flex flex-col gap-y-3 bg-gray-100 bg-opacity-10 p-4 rounded-lg border'>
+      <h1 className='pl-2 raleway tracking-tight font-bold text-2xl'>
+        Messages
+      </h1>
+      <div className='pl-2 flex flex-col justify-start overflow-y-auto flex-grow'>
         {loading ? (
-          <p>Loading...</p>
+          <div className='flex flex-1'>
+            <p>Loading...</p>
+          </div>
         ) : messagesArr?.length ? (
-          messagesArr.map(({ id, message, User, createdAt, editable }) => (
-            <Message
-              key={id}
-              message={message}
-              sender={User.username}
-              time={createdAt.toString()}
-              myMessage={editable}
-              messageId={id}
-            />
-          ))
+          <div className='flex flex-1 flex-col gap-y-4 overflow-y-auto'>
+            {' '}
+            {/* //ignore ts-error */}
+            {messagesArr.map(({ id, message, User, createdAt, editable }) => (
+              <Message
+                key={id}
+                message={message}
+                sender={User.username}
+                time={createdAt.toString()}
+                myMessage={editable}
+                messageId={id}
+              />
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
         ) : (
-          <p className='text-center text-gray-300'>No messages yet</p>
+          <div className='flex-1 flex-col overflow-y-auto'>
+            <p className=' text-white opacity-50 text-sm'>No messages yet...</p>
+          </div>
         )}
         <div ref={messagesEndRef} />
       </div>
+
       <SendMessageForm id={groupId} slug={groupSlug} />
     </section>
   )
 }
+
+
+

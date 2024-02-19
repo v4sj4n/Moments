@@ -39,7 +39,7 @@ export default function SendMessageForm({
     <form
       action={sendMessage}
       onSubmit={submitHandler}
-      className='flex gap-2 col-span-1'
+      className='flex gap-2 '
     >
       <input type='hidden' name='groupId' value={id} />
       <input type='hidden' name='groupSlug' value={slug} />
@@ -50,6 +50,7 @@ export default function SendMessageForm({
         className='w-full px-4 py-2 bg-transparent border outline-none rounded-md'
         value={message}
         onChange={(e) => setMessage(e.target.value)}
+        pattern="\S+"
         required
       />
       <Button />

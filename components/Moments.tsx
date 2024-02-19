@@ -13,6 +13,9 @@ type Props = {
 export default function Moments({ slug, groupId }: Props) {
   const [isOpen, setIsOpen] = useState(false)
 
+  const [loading, setLoading] = useState<boolean>(true)
+
+
   const closeModal = () => setIsOpen(false)
   const [moments, setMoments] = useState<any[]>([])
 
@@ -66,8 +69,9 @@ export default function Moments({ slug, groupId }: Props) {
     }
     fetchMoments()
     fetchIsAdmin()
-  }, [isOpen, slug, user.userId])
 
+    setLoading(false)
+  }, [isOpen, slug, user.userId])
 
   return (
     <>
@@ -77,15 +81,20 @@ export default function Moments({ slug, groupId }: Props) {
         slug={slug}
         groupId={groupId}
       />
-      <section className='h-[70svh] grid grid-rows-12 bg-gray-100 bg-opacity-10 p-4 rounded-lg border  '>
-        <div className='row-span-11'>
-          <h1 className='raleway font-bold text-xl'>Moments</h1>
-          <hr className='border-opacity-25 border-zinc-300 mb-2 mt-1' />
-          <Suspense fallback={<p>loading moments...</p>}>
-            {moments === null ? (
-              <p>No moments</p>
+      <section className='h-[70svh] sm:h-[65svh]  flex flex-col gap-y-2 bg-gray-100 bg-opacity-10 p-4 rounded-lg border'>
+          <h1 className='pl-2 raleway tracking-tight font-bold text-2xl'>
+            Moments
+          </h1>
+            {loading ? (
+               <div className='h-full flex-1 flex-col overflow-y-auto'>
+               <p className='pl-2 text-white opacity-50 text-sm'>Loading...</p>
+             </div>
+            )  : moments.length === 0 || moments === null ? (
+              <div className='h-full flex-1 flex-col overflow-y-auto'>
+                <p className='pl-2 text-white opacity-50 text-sm'>No moments...</p>
+              </div>
             ) : (
-              <div className='md:h-[60svh] h-[50svh] flex flex-col gap-y-4 overflow-y-auto'>
+              <div className=' flex flex-1 flex-col gap-y-4 overflow-y-auto'>
                 {moments.map((moment: any) => (
                   <Moment
                     key={moment.id}
@@ -97,10 +106,8 @@ export default function Moments({ slug, groupId }: Props) {
                 ))}
               </div>
             )}
-          </Suspense>
-        </div>
         <button
-          className='self-end w-full bg-zinc-200 border rounded-md text-zinc-700 px-4 py-2 text-center font-bold'
+          className=' w-full bg-zinc-200 border rounded-md text-zinc-700 px-4 py-2  text-center font-bold'
           onClick={() => setIsOpen(true)}
         >
           Create a moment

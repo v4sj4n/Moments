@@ -2,6 +2,7 @@
 import { deleteMessage, editMessage } from '@/lib/actions'
 import { PaperPlaneRight, PencilSimple, Prohibit, TrashSimple } from '@phosphor-icons/react'
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 
 export default function Message({
   sender,
@@ -30,14 +31,22 @@ export default function Message({
   const [isToBeEditted, setIsToBeEditted] = useState<boolean>(false)
 
   return (
-    <div className='mb-2'>
+    <motion.div
+  initial={{  y: '-100%', opacity: 0 }} 
+  animate={{  y: '0%', opacity: 1 }} 
+  transition={{
+    ease: 'linear',
+    duration: 0.5,
+    // x: { duration: 0.5 }
+  }}
+  className='mb-2'>
       {!isToBeEditted ? (
         <div className='flex justify-between'>
         <div>
           <h3 className='raleway font-bold'>
             <span className='accent-color'>{sender}</span>:
           </h3>
-          <p className='break-words col-span-11'>{message}</p>
+          <p className='break-words col-span-11 line-clamp'>{message}</p>
         </div>
 
         <div>
@@ -81,6 +90,6 @@ export default function Message({
           </div>
         </form>
       )}
-    </div>
+    </motion.div>
   )
 }
