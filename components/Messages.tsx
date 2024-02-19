@@ -5,7 +5,6 @@ import Message from './Message'
 import { useEffect, useRef, useState } from 'react'
 import SendMessageForm from './SendMessageForm'
 import { useUser } from '@clerk/nextjs'
-import { motion } from 'framer-motion'
 
 type Message = {
   id: string
@@ -146,7 +145,7 @@ export default function Messages({
       )
       .subscribe()
 
-    return () => {
+    return () => {pn
       supabase.removeChannel(channel)
     }
   }, [groupId, userData.user?.id])
@@ -158,7 +157,7 @@ export default function Messages({
   }, [messagesArr])
 
   return (
-    <motion.section
+    <section
       className='h-[70svh] sm:h-[65svh] col-span-2 flex flex-col gap-y-3 bg-gray-100 bg-opacity-10 p-4 rounded-lg border'
       initial={{ y: '-100%', opacity: 0 }}
       animate={{ y: '0%', opacity: 1 }}
@@ -198,6 +197,6 @@ export default function Messages({
       </div>
 
       <SendMessageForm id={groupId} slug={groupSlug} />
-    </motion.section>
+    </section>
   )
 }
