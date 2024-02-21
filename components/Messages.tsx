@@ -145,7 +145,7 @@ export default function Messages({
       )
       .subscribe()
 
-    return () => {pn
+    return () => {
       supabase.removeChannel(channel)
     }
   }, [groupId, userData.user?.id])
@@ -157,15 +157,7 @@ export default function Messages({
   }, [messagesArr])
 
   return (
-    <section
-      className='h-[70svh] sm:h-[65svh] col-span-2 flex flex-col gap-y-3 bg-gray-100 bg-opacity-10 p-4 rounded-lg border'
-      initial={{ y: '-100%', opacity: 0 }}
-      animate={{ y: '0%', opacity: 1 }}
-      transition={{
-        ease: 'linear',
-        duration: 0.5,
-      }}
-    >
+    <section className='h-[70svh] sm:h-[65svh] col-span-2 flex flex-col gap-y-3 bg-gray-100 bg-opacity-10 p-4 rounded-lg border'>
       <h1 className='pl-2 raleway tracking-tight font-bold text-2xl'>
         Messages
       </h1>

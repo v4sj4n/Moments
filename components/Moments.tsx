@@ -82,12 +82,6 @@ export default function Moments({ slug, groupId }: Props) {
       />
       <section
         className='h-[70svh] sm:h-[65svh]  flex flex-col gap-y-2 bg-gray-100 bg-opacity-10 p-4 rounded-lg border'
-        initial={{ y: '-100%', opacity: 0 }}
-        animate={{ y: '0%', opacity: 1 }}
-        transition={{
-          ease: 'linear',
-          duration: 0.5,
-        }}
       >
         <h1 className='pl-2 raleway tracking-tight font-bold text-2xl'>
           Moments

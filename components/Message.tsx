@@ -7,7 +7,6 @@ import {
   TrashSimple,
 } from '@phosphor-icons/react'
 import { useState } from 'react'
-import { motion } from 'framer-motion'
 
 export default function Message({
   sender,
