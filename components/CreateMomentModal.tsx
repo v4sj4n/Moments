@@ -73,7 +73,7 @@ function CreateMomentModal({ isOpen, closeModal, groupId, slug }: Props) {
             >
               <Dialog.Panel
                 className={
-                  'w-full max-w-md transform overflow-hidden rounded-2xl bg-zinc-700 p-6 text-left align-middle shadow-xl transition-all'
+                  'w-full max-w-md transform overflow-hidden rounded-2xl bg-zinc-700/10 backdrop-blur-sm p-6 text-left align-middle shadow-xl transition-all'
                 }
               >
                 <Dialog.Title
